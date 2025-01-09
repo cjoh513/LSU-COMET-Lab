@@ -24,3 +24,6 @@ Or email us with any questions at **cjoh513@lsu.edu**
 
 
 
+
+
+![COMET_Lab_Logo_3dot](https://github.com/user-attachments/assets/279a5043-5716-4476-83cf-c92da097d093)
