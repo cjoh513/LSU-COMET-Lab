@@ -8,4 +8,3 @@ Navigate to your WRF directory that includes the configure
 
 
 
-
