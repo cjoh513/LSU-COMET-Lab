@@ -2,7 +2,7 @@
 This directory holds WRF how-tos and troubleshooting.  
 
 # Files
-### Troubleshooting
+### Troubleshooting and Tips
 Markdown file with an assortment of issues we've encountered and their solutions
 ### NU-WRF Chem Basics
 How-to for using the NASA-Unified WRF system with chem
