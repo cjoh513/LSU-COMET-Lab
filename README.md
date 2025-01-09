@@ -13,3 +13,14 @@ Repository containing guides and troubleshooting tips for the Weather Research a
 ### Python
 Scripts and functions we find useful related to our research.
 
+
+
+
+
+# About Us
+This repository is maintained by lab members of the COMET Lab.  
+You can see more information about the lab [**HERE**](https://faculty.lsu.edu/paulmiller/comet_lab.php)\
+Or email us with any questions at **cjoh513@lsu.edu**
+
+
+
