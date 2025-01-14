@@ -58,7 +58,18 @@ done'
 * if you then run into an error of it unable to find "-lnetcdf" the "LDFLAGS" and "CPPFLAGS" environment variables need to be modified to add the necdf path.
 * type "export LDFLAGS=-L$DIR/netcdf/lib"  
 * type "export CPPFLAGS=-I$DIR/netcdf/include"  
-* 
+&nbsp;
+
+&nbsp;
+
+# error while loading shared libraries: libpng12.so.0
+./ungrib.exe: error while loading shared libraries: libpng12.so.0: cannot open shared object file: No such file or directory  
+This is an ungrib error in which the program cannot find the libpng12.so.0 file despite it being in the directory.
+This error was resolved for me by following [THIS](https://forum.mmm.ucar.edu/threads/resolved-error-while-loading-shared-libraries-libpng12-so-0.193/) forum post
+The "LD_LIBRARY_PATH" needed to be set by the following: "setenv LD_LIBRARY_PATH [full Path to libraries]/grib2/lib:$LD_LIBRARY_PATH"
+This allows for ungrib to locate the path to the lib folder.
+
+
 
 
 
