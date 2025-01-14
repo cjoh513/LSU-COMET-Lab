@@ -47,8 +47,18 @@ The steps outlined by MLandreau in the post worked for me as I was using netcdf-
 * from the LIBRARIES directory:
 * type what's in the single quotes: 'sed -i "s/$CC -V/$CC -v/g" netcdf-fortran-4.5.2/configure'  
 * This replaces "$CC -V" with "$CC -v" in the netcdf configure file.  However this might not fix the problem.
+* Open the configure file and go to line 3919.  This is the line right about "$as_echo '$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5'  
+* Above this line add what is in the single quotes ':<<END'  
+* Find line 3943 or the lines that end with:
+'$as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5  
+test $ac_status = 0; }  
+done'  
+* Add "END" to the line after "done".
+* save and close the configure file.
+* if you then run into an error of it unable to find "-lnetcdf" the "LDFLAGS" and "CPPFLAGS" environment variables need to be modified to add the necdf path.
+* type "export LDFLAGS=-L$DIR/netcdf/lib"  
+* type "export CPPFLAGS=-I$DIR/netcdf/include"  
 * 
-
 
 
 
