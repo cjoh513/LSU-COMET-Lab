@@ -14,7 +14,7 @@ To get the WRF compilation tar, you can visit [THIS](https://github.com/wrf-mode
 
 # System Environment Tests
 The Second step is to makesure your gfortran, cpp, and gcc are working.  
-If you're compiling these on LSU's systems then these should work without any issue. 
+If you're compiling WRF on LSU's systems then these compilers should work without any issue as they are all preinstalled on the system.
 * type "which gfortran".  
 * type "which cpp".  
 * type "which gcc".  
@@ -61,6 +61,17 @@ These tests ensure csh, perl, and sh are working properly.
 ### Test #7
 * Type "./TEST_sh.sh".
 * The following should be outputted: "SUCCESS sh test".
+
+&nbsp;
+
+# Library Compatibility Test
+We've ensured the compilers are compatible, but now we need to ensure that the libraries of Fortran, C, and NetCDF are compatible.  
+Again, if you're compiling these on LSU's systems there should be no incompatiblities.  
+* In the same "build_wrf/tests" directory, download [THIS](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar) tar file which contains the libraries test files.
+* Unpack the tar file with "tar -xf Fortran_C_NETCDF_MPI_tests.tar".
+### Test #1
+* 
+
 
 
 
