@@ -43,6 +43,25 @@ SUCCESS test 2 fortran only free format".
 * Type "./a.out".
 * The Following should be outputted: "SUCCESS test 3 C only".
 ### Test #4
+* Type "gcc -c -m64 TEST_4_fortran+c_c.c".
+* Type "gfortran -c -m64 TEST_4_fortran+c_f.f90".
+* Type "gfortran -m64 TEST_4_fortran+c_f.o TEST_4_fortran+c_c.o".
+* Type "./a.out".
+* The following should be outputted: "C function called by Fortran
+Values are xx = 2.00 and ii = 1
+SUCCESS test 4 fortran calling c".
+### Test #5
+In addition to the mentioned compilers the WRF build system relies on scripts as the user interface which rely on csh, perl, and sh.  
+These tests ensure csh, perl, and sh are working properly.  
+* Type "./TEST_csh.csh".
+* The following should be outputted: "SUCCESS csh test".
+### Test #6
+* Type "./TEST_perl.pl".
+* The following should be outputted: "SUCCESS perl test".
+### Test #7
+* Type "./TEST_sh.sh".
+* The following should be outputted: "SUCCESS sh test".
+
 
 
 
