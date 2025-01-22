@@ -23,8 +23,27 @@ If there is a version on the system then the above commands will identify the pa
 
 &nbsp;
 
-* Create a new directory called "tests".
-* 
+* Within the "build_wrf" directory, create a new directory called "tests".
+* "cd" into the new "tests" directory.
+* use "wget" to download the Fortran and C Tests from [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_tests.tar).  
+![image](https://github.com/user-attachments/assets/1941f32d-4dd2-4af8-8f26-b7e9ae678f23).
+* Unpack the tar file with "tar -xf Fortran_C_tests.tar".
+There are Seven tests that will be run.  Each is a subheading below.  
+### Test #1
+* Type "gfortran TEST_1_fortran_only_fixed.f".
+* Type "./a.out".
+* The following should be outputted: "SUCCESS test 1 fortran only fixed format".
+### Test #2
+* Type "gfortran TEST_2_fortran_only_free.f90".
+* Type "./a.out".
+* The following should be outputted: "Assume Fortran 2003: has FLUSH, ALLOCATABLE, derived type, and ISO C Binding
+SUCCESS test 2 fortran only free format".  
+### Test #3
+* Type "gcc TEST_3_c_only.c".
+* Type "./a.out".
+* The Following should be outputted: "SUCCESS test 3 C only".
+### Test #4
+
 
 
 
