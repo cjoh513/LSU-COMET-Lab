@@ -72,9 +72,14 @@ These tests ensure csh, perl, and sh are working properly.
 
 # Building Libraries  
 Next, The libraries for GNU/gcc need to be built.  The online tutorial at the top of this file will link you to the WRF-Forums for installation instructions.  
-[THIS](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) Links directly to the forum installation instructions as well.  
+[THIS](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) also links directly to the forum installation instructions as well.  
+The commands within this tutorial will be for specific versions of the libraries which may be outdated in the future.  If the versions used here do not work, you can check the forum tutorial linked above and UCAR's [files](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/) to find the most up-to-date libraries.  
+
+&nbsp;
+
 * Within the "build-wrf" directory make a new directory with the command "mkdir libraries"  
 This is the directory where the essential WRF libraries will be installed.
+
 * Type the below set of commands on individual lines to set environment variables.  Be warned, until we add them to the .bashrc file, they will be cleared if you close the terminal.  I won't be enclosing them in quotes because some of the commands have quotes within the command itself, but I do have a photo showing each as well.
 * DIR=[path-to-your-libraries]/libraries
 * export NETCDF=$DIR/netcdf
@@ -91,6 +96,9 @@ This is the directory where the essential WRF libraries will be installed.
 * export LDFLAGS="-L$NETCDF/lib -L$DIR/grib2/lib"
 * export CPPFLAGS="-I$NETCDF/include -I$DIR/grib2/include -fcommon"
 ![image](https://github.com/user-attachments/assets/accb164c-a19f-41d1-bb86-94aeb64244a4)
+
+### Install zlib
+* 
 
 
 &nbsp;
