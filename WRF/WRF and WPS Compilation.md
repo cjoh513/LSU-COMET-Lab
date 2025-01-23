@@ -98,8 +98,25 @@ This is the directory where the essential WRF libraries will be installed.
 ![image](https://github.com/user-attachments/assets/accb164c-a19f-41d1-bb86-94aeb64244a4)
 
 ### Install zlib
-* 
+* "cd" into the "build-wrf/libraries" directory
+* Type the following commands:
+* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
+* tar xzvf zlib-1.2.11.tar.gz
+* cd zlib-1.2.11
+* ./configure --prefix=$DIR/grib2
+* make -j 4
+* make install
+* cd ..
+* rm -rf zlib*  
+You should be left with a directory "grib2" in the "libraries" directory  
+![image](https://github.com/user-attachments/assets/12a2aa61-8fa2-4a17-b87c-76d62db93201)
 
+### Install HDF5
+* within the "build-wrf/libraries" directory type the following commands:
+* wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
+* tar xzvf hdf5-1_10_5.tar.gz
+* cd hdf5-hdf5-1_10_5/
+* 
 
 &nbsp;
 
