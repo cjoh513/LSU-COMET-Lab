@@ -71,8 +71,8 @@ These tests ensure csh, perl, and sh are working properly.
 &nbsp;
 
 # Building Libraries  
-Next, The libraries for GNU/gcc need to be built.  The online tutorial at the top of this file will link you to the WRF-Forums for installation instructions.  
-[THIS](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) also links directly to the forum installation instructions as well.  
+Next, The libraries for GNU/gcc need to be built.  There are different ways people install the necessary libraries for WRF.  The [official](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) instructions do not work for me (There's something in the configure arguments that don't play nicely on LSU's systems), but following [MLandreau's](https://forum.mmm.ucar.edu/threads/ubuntu-20-04-configure-netcdf-fortran-4-5-2-error-c-compiler-cannot-create-executables.12707/) steps from the linked forum (9th entry down) consistently works.  This section will follow those steps for the library installation.  
+
 The commands within this tutorial will be for specific versions of the libraries which may be outdated in the future.  If the versions used here do not work, you can check the forum tutorial linked above and UCAR's [files](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/) to find the most up-to-date libraries.  
 
 &nbsp;
@@ -81,21 +81,49 @@ The commands within this tutorial will be for specific versions of the libraries
 This is the directory where the essential WRF libraries will be installed.
 
 * Type the below set of commands on individual lines to set environment variables.  Be warned, until we add them to the .bashrc file, they will be cleared if you close the terminal.  I won't be enclosing them in quotes because some of the commands have quotes within the command itself, but I do have a photo showing each as well.
+* If interested, these are setting variables that will come up for much of the compilation process
 * DIR=[path-to-your-libraries]/libraries
-* export NETCDF=$DIR/netcdf
-* export LD_LIBRARY_PATH=$NETCDF/lib:$DIR/grib2/lib
-* export PATH=$NETCDF/bin:$DIR/mpich/bin:${PATH}
-* export JASPERLIB=$DIR/grib2/lib
-* export JASPERINC=$DIR/grib2/include
-* export CC=gcc
-* export CXX=g++
-* export FC=gfortran
-* export FCFLAGS="-m64 -fallow-argument-mismatch"
-* export F77=gfortran
-* export FFLAGS="-m64 -fallow-argument-mismatch"
-* export LDFLAGS="-L$NETCDF/lib -L$DIR/grib2/lib"
-* export CPPFLAGS="-I$NETCDF/include -I$DIR/grib2/include -fcommon"
-![image](https://github.com/user-attachments/assets/accb164c-a19f-41d1-bb86-94aeb64244a4)
+* export CC=gcc  
+* export CXX=g++  
+* export FC=gfortran  
+* export FCFLAGS=-m64  
+* export F77=gfortran  
+* export FFLAGS=-m64  
+* export JASPERLIB=$DIR/grib2/lib  
+* export JASPERINC=$DIR/grib2/include  
+![image](https://github.com/user-attachments/assets/07902164-c181-49d8-820f-370fd3795ab7)
+
+&nbsp;
+
+### Install NetCDF-c
+Within the "build-wrf/libraries" directory, type the below set of commands:
+* wget https://github.com/Unidata/netcdf-c/archive/v4.7.2.tar.gz
+* tar xzvf v4.7.2.tar.gz
+* cd netcdf-c-4.7.2
+* ./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared  
+Important Note: the "./configure" command should end in a configuration summary looking something like this image  
+![image](https://github.com/user-attachments/assets/f6e7a088-7842-45c2-a68f-a2acd661d666)
+* type the following commands
+* make
+* make install  
+Important Note: After the "make install" command, if everything ran properly you should get a congratulations message like the image below.  
+![image](https://github.com/user-attachments/assets/b611ab89-0de4-4536-ac08-2875ca45efa2)  
+Within the "build-wrf/libraries" directory, there should now be the "netcdf", "netcdf-c-4.7.2", and "v4.7.2.tar.gz" files.  
+![image](https://github.com/user-attachments/assets/b2fa377f-37b2-4b0e-9770-e4719fad8545)  
+Clean up by removing the .tar file with the command "rm v4.7.2.tar.gz".  You may want to wait until the end to remove this in case you run into hiccups and need a fresh copy from the .tar file.  
+![image](https://github.com/user-attachments/assets/7f82446f-db78-410c-aba6-07641d59c4c4)  
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Install zlib
 * "cd" into the "build-wrf/libraries" directory
