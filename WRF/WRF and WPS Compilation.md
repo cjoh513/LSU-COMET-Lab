@@ -116,8 +116,52 @@ Clean up by removing the .tar file with the command "rm v4.7.2.tar.gz".  You may
 
 
 
+&nbsp;
+
+### Setting More Environmental Variables
+Set a few more environmental variables by putting the following commands:  
+* export PATH=$DIR/netcdf/bin:$PATH  
+* export NETCDF=$DIR/netcdf  
+* export LIBS="-lnetcdf"  
+* export LDFLAGS=-L$DIR/netcdf/lib  
+* export CPPFLAGS=-I$DIR/netcdf/include  
+![image](https://github.com/user-attachments/assets/9fd28784-115a-483a-9f46-9f2e412053e1)
+
+&nbsp;
+
+### Installing netcdf-fortran
+type the following commands:
+* wget https://github.com/Unidata/netcdf-fortran/archive/v4.5.2.tar.gz
+* tar xzvf v4.5.2.tar.gz
+* cd netcdf-fortran-4.5.2
+* ./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared
+* make
+* make install  
+* cd ..  
+* rm v4.5.2.tar.gz
+![image](https://github.com/user-attachments/assets/5a53abf6-f111-46cd-a101-0075d8d1fbab)  
 
 
+&nbsp;
+
+### Installing mpich
+type the following commands:
+* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/mpich-3.0.4.tar.gz  
+* tar xzvf mpich-3.0.4.tar.gz
+* cd mpich-3.0.4
+* ./configure --prefix=$DIR/mpich
+* make
+* make install
+* cd ..
+* rm mpich-3.0.4.tar.gz  
+
+&nbsp;
+
+### Installing zlib
+
+### Installing libpng
+### Installing jasper  
+### Installing hdf5
 
 
 
