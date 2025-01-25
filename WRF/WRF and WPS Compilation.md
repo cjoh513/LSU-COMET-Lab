@@ -219,11 +219,20 @@ From the "build-wrf/libraries" directory, type the following commands:
 # Library Compatibility Test
 We've ensured the compilers are compatible, but now we need to ensure that the libraries of Fortran, C, and NetCDF are compatible.  
 Again, if you're compiling these on LSU's systems there should be no incompatiblities.  
-* In the same "build_wrf/tests" directory, download [THIS](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar) tar file which contains the libraries test files.
+* In the same "build_wrf/tests" directory the compiler tests were run in, download [THIS](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar) tar file which contains the libraries test files.
 * Unpack the tar file with "tar -xf Fortran_C_NETCDF_MPI_tests.tar"
 ### Test #1
-* 
-
+* Type the following commands:
+* cp ${NETCDF}/include/netcdf.inc .
+* gfortran -c 01_fortran+c+netcdf_f.f
+* gcc -c 01_fortran+c+netcdf_c.c
+* gfortran 01_fortran+c+netcdf_f.o 01_fortran+c+netcdf_c.o \-L${NETCDF}/lib -lnetcdff -lnetcdf
+* ./a.out
+* The following should be outputted:
+  * "C function called by Fortran
+  * Values are xx = 2.00 and ii = 1
+  * SUCCESS test 1 fortran + c + netcdf"
+  * 
 
 
 
