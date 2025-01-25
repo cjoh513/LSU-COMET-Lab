@@ -154,43 +154,67 @@ type the following commands:
 * make install
 * cd ..
 * rm mpich-3.0.4.tar.gz  
+* export PATH=$DIR/mpich/bin:$PATH
 
 &nbsp;
 
 ### Installing zlib
-
-### Installing libpng
-### Installing jasper  
-### Installing hdf5
-
-
-
-
-
-
-
-### Install zlib
-* "cd" into the "build-wrf/libraries" directory
-* Type the following commands:
+From the "build-wrf/libraries" directory, type the following commands:
 * wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
-* tar xzvf zlib-1.2.11.tar.gz
 * cd zlib-1.2.11
 * ./configure --prefix=$DIR/grib2
-* make -j 4
+* make
 * make install
 * cd ..
-* rm -rf zlib*  
-You should be left with a directory "grib2" in the "libraries" directory  
-![image](https://github.com/user-attachments/assets/12a2aa61-8fa2-4a17-b87c-76d62db93201)
-
-### Install HDF5
-* within the "build-wrf/libraries" directory type the following commands:
-* wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
-* tar xzvf hdf5-1_10_5.tar.gz
-* cd hdf5-hdf5-1_10_5/
-* 
+* rm zlib-1.2.11.tar.gz
+* export LDFLAGS="-L$DIR/grib2/lib -L$DIR/netcdf/lib"
+* export CPPFLAGS="-I$DIR/grib2/include -I$DIR/netcdf/lib"
+* ![image](https://github.com/user-attachments/assets/ada181cd-b96e-498e-9ad0-c2b472d0979e)  
 
 &nbsp;
+
+
+### Installing libpng
+From the "build-wrf/libraries" directory, type the following commands:
+* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/libpng-1.2.50.tar.gz
+* tar xzvf libpng-1.2.50.tar.gz
+* cd libpng-1.2.50
+* ./configure --prefix=$DIR/grib2
+* make
+* make install
+* cd ..
+* rm libpng-1.2.50.tar.gz
+
+&nbsp;
+
+
+### Installing jasper  
+From the "build-wrf/libraries" directory, type the following commands:
+* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
+* tar xzvf jasper-1.900.1.tar.gz
+* cd jasper-1.900.1
+* ./configure --prefix=$DIR/grib2
+* make
+* make install
+* cd ..
+* rm jasper-1.900.1.tar.gz
+
+&nbsp;
+
+### Installing hdf5
+From the "build-wrf/libraries" directory, type the following commands:
+* wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
+* tar xzvf hdf5-1.10.5.tar.gz
+* cd hdf5-hdf5-1_10_5
+* ./configure --prefix=$DIR/netcdf --with-zlib=$DIR/grib2 --enable-fortran --enable-shared
+* make
+* make install
+* cd ..
+* rm hdf5-1.10.5.tar.gz
+
+
+&nbsp;
+
 
 # Library Compatibility Test
 We've ensured the compilers are compatible, but now we need to ensure that the libraries of Fortran, C, and NetCDF are compatible.  
