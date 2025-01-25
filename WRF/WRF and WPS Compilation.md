@@ -269,8 +269,26 @@ Now we can actually compile WRF and then WPS.  For this tutorial and in general,
     * Because LSU's systems use a series of clusters and we compiled with gfortran select option 34 by typing "34"
     * type "1" for the "Compile for nesting?" option.  This allows nested simulations.
     * ![image](https://github.com/user-attachments/assets/6ac672f6-c70b-44ab-9d73-add55803f8ed)  
-   
+
+### Removing Leap Years
+If you wish to compile your WRF without Leap Days (i.e., skips Feb. 29th every 4 years), follow these steps.  If you want leap-days then you can skip to the "./compile em_real >& log.compile" step
+* From the "build-wrf/WRF-4.2.2" directory open the "configure.wrf" file.
+* Navigate down to the "Architecture Specific Settings" section.
+* To the line "ARCH_LOCAL" add at the end, "-DNO_LEAP_CALENDAR"
+* Save and close "configure.wrf"
+* ![image](https://github.com/user-attachments/assets/9ddbde93-1be7-490c-9338-e98fb80f2e42)
+
+* This is the end of the Removing Leap Years Section
+&nbsp;
+
+Once you've either skipped the leap year removal or completed it, proceed here.
+* Type:
+  * ./compile em_real >& log.compile
+  * The process will probably take some time (maybe 20-30 minutes).
+  * This tutorial uses the "em_real" "case_name", which is the most common option and what I use as it's designed for real data situations.  Other options can be found in the official WRF tutorial [here](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php).
   * 
+
+
 
 
 
