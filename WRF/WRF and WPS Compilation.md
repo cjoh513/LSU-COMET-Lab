@@ -232,8 +232,59 @@ Again, if you're compiling these on LSU's systems there should be no incompatibl
   * "C function called by Fortran
   * Values are xx = 2.00 and ii = 1
   * SUCCESS test 1 fortran + c + netcdf"
+### Test #2
+* Type the following commands
+  * cp ${NETCDF}/include/netcdf.inc .
+  * mpif90 -c 02_fortran+c+netcdf+mpi_f.f
+  * mpicc -c 02_fortran+c+netcdf+mpi_c.c
+  * mpif90 02_fortran+c+netcdf+mpi_f.o \
+02_fortran+c+netcdf+mpi_c.o \
+     -L${NETCDF}/lib -lnetcdff -lnetcdf  
+  * mpirun ./a.out  
+* The following should be outputted:
+  * C function called by Fortran
+  * Values are xx = 2.00 and ii = 1
+  * status = 2
+  * SUCCESS test 2 fortran + c + netcdf + mpi  
+
+
+ &nbsp;  
+
+ # Building WRF and WPS
+Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz) with [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz).  The compilation choices will be chosen with LSU's systems in mind.  
+### Building WRF
+* From the "build-wrf" directory, download WRF and untar with the below commands:
+  * wget https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz
+  * tar xzvf v4.2.2.tar.gz
+  * rm v4.2.2.tar.gz
+    This should create a directory called "WRF-4.2.2"  
+    ![image](https://github.com/user-attachments/assets/11a29fcb-dde3-4c37-905a-378849997422)  
+ 
+    
+* Navigate into the "build-wrf/WRF-4.2.2" and create the configure file with:
+  * cd WRF-4.2.2
+  * ./configure
+    * You'll see a large number of options for you to select how to configure WRF based on your system.
+    * They correspond to which compiler you are using and whether you want WRF to run serially, Shared-Memory Parallelism, or with Distributed-Memory Parallelism.  More information on these can be found [here](https://forum.mmm.ucar.edu/threads/compiling-options-serial-vs-smpar-vs-dmpar.65/).  
+    * Because LSU's systems use a series of clusters and we compiled with gfortran select option 34 by typing "34"
+    * type "1" for the "Compile for nesting?" option.  This allows nested simulations.
+    * ![image](https://github.com/user-attachments/assets/6ac672f6-c70b-44ab-9d73-add55803f8ed)  
+   
   * 
 
+
+
+
+
+
+
+&nbsp;
+
+### Building WPS
+  *  wget https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz  
+* 
+ 
+  
 
 
 
