@@ -279,14 +279,30 @@ If you wish to compile your WRF without Leap Days (i.e., skips Feb. 29th every 4
 * ![image](https://github.com/user-attachments/assets/9ddbde93-1be7-490c-9338-e98fb80f2e42)
 
 * This is the end of the Removing Leap Years Section
+
 &nbsp;
 
+
 Once you've either skipped the leap year removal or completed it, proceed here.
+
+&nbsp;
+
+
 * Type:
   * ./compile em_real >& log.compile
-  * The process will probably take some time (maybe 20-30 minutes).
-  * This tutorial uses the "em_real" "case_name", which is the most common option and what I use as it's designed for real data situations.  Other options can be found in the official WRF tutorial [here](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php).
-  * 
+* The process will probably take some time (maybe 20-30 minutes).
+* This tutorial uses the "em_real" "case_name", which is the most common option and what I use as it's designed for real data situations.  Other options can be found in the official WRF tutorial [here](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php).
+* The end of the log.compile should look like the picture below if it ran correctly.
+* ![image](https://github.com/user-attachments/assets/3eb0f3c2-573d-4a00-8d1c-f628e1f92fa6)
+* You can also check that the essential .exe files were properly created with :
+  * ls -ls main/*.exe
+  * ![image](https://github.com/user-attachments/assets/5c651dc0-ea90-49d8-8c58-2f31f6dd97b7)
+  * The numbers circled are the file size in bytes.  They should be around this size (~65MB), but if they are 0 bytes, something has gone wrong in the compilation process and you need to check the log.compile for an error.
+ Congrats! You've successfully compiled WRF-4.2.2 and now we only need to worry about WPS.
+
+
+
+
 
 
 
