@@ -1,3 +1,18 @@
+# Table of Contents
+
+1. [Compiling WRF with no Leap Years](#compiling-wrf-with-no-leap-years)  
+   - [Configuring](#configuring)  
+   - [Altering configure.wrf](#altering-configurewrf)  
+   - [Compile](#compile)  
+
+2. [Errors and Solutions](#errors-and-solutions)  
+   - [gfortran: error: wrf.o: No such file or directory](#gfortran-error-wrfo-no-such-file-or-directory)  
+   - [gcc: error: unrecognized command-line option '-V'](#gcc-error-unrecognized-command-line-option--v)  
+   - [error while loading shared libraries: libpng12.so.0](#error-while-loading-shared-libraries-libpng12so0)  
+
+3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
+
+
 # Compiling WRF with no Leap Years
 This section is dedicated to how to recompile WRF so it skipps leap days (i.e., Feb 29th)
 This does assume you've already built the libraries and are either at the "Building WRF" section of the official compilation tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php#STEP8) or you've already compiled WRF
@@ -70,7 +85,9 @@ The "LD_LIBRARY_PATH" needed to be set by the following: "setenv LD_LIBRARY_PATH
 This allows for ungrib to locate the path to the lib folder.
 
 
+# If you delete your Vtable
 
+If you erase the Vtable here you can find a fast copy [Link to the Vtable](https://github.com/yyr/wps/blob/master/ungrib/Variable_Tables/Vtable.ECMWF)
 
 
 
