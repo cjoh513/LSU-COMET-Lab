@@ -386,6 +386,34 @@ Important Note: In my experience, geogrid.exe often requires a few more geog fil
 
 &nbsp;
 
+# Adding Environmental Variables to .bashrc
+This section takes most of those environmental variables set at the start of the tutorial and adds them to your .bashrc file.  This is important because otherwise when you close the terminal you'll lose the environmental variables you set, some of which are essential to run WRF.  
+
+*Open the .bashrc file with either of the below commands:
+  *  vi ~/.bashrc
+  *  nano ~/.bashrc
+*  Make sure the below environmental variables  are added to the file
+  * export WRF_DIR=/work/cjoh513/build-wrf/WRF-4.2.2
+  * export WRF_CHEM=1
+  * export WRF_KPP=0
+  * export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+  * export DIR=/work/cjoh513/build-wrf/libraries
+  * export PATH=$DIR/netcdf/bin:$DIR/mpich/bin:$PATH
+  * export NETCDF=$DIR/netcdf
+  * export JASPERLIB=$DIR/grib2/lib
+  * export JASPERINC=$DIR/grib2/include
+  * export CC=gcc
+  * export CXX=g++
+  * export FC=gfortran
+  * export FCFLAGS=-m64
+  * export F77=gfortran
+  * export FFLAGS=-m64
+* Here is an example of what mine looks like, but there are a few more variables added than strictly for this tutorial.  
+* ![image](https://github.com/user-attachments/assets/472643fb-5907-4670-934e-331637da16e7)  
+
+
+
+
 Congratulations!!!  
 The process may have been arduous, but you've successfully installed libraries and compiled WRF/WPS.  
 
