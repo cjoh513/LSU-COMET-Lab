@@ -87,8 +87,16 @@ This allows for ungrib to locate the path to the lib folder.
 
 # If you delete your Vtable
 
-If you erase the Vtable here you can find a fast copy [Link to the Vtable](https://github.com/yyr/wps/blob/master/ungrib/Variable_Tables/Vtable.ECMWF)
+If you erase the Vtable here you can find a fast copy
 
+## For GFS
+[GFS Vtable](https://github.com/yyr/wps/blob/master/ungrib/Variable_Tables/Vtable.GFS)
+
+## For ECMWF
+[ECMWF Vtable](https://github.com/yyr/wps/blob/master/ungrib/Variable_Tables/Vtable.ECMWF)
+
+## Other Vtables
+[Other Vtables](https://github.com/yyr/wps/tree/master/ungrib/Variable_Tables)
 
 
 
