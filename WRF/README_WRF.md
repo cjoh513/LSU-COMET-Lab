@@ -11,3 +11,5 @@ How-to for using ERA5 data
 ### ndown
 How-to for using ndown
 
+# Way to send simulations to the cluster
+We create a file called send_wrf.py. With this file you can execute small simulations (not climatology)
