@@ -13,6 +13,8 @@ Repository containing guides and troubleshooting tips for the Weather Research a
 ### Python
 Scripts and functions we find useful related to our research.
 
+### Common Issues for Freshmen
+Guides and common pit-falls for those new to LSU
 
 
 
