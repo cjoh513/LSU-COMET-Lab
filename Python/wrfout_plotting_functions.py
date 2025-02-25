@@ -16,16 +16,6 @@ from datetime import datetime, timedelta
 
 
 
-# def wrf_precipitation(wrf_file_path):
-#     wrf_file = Dataset(wrf_file_path)
-#     start_rain_nc = wrf_file['RAINNC'][24,:,:]
-#     end_rain_nc   = wrf_file['RAINNC'][-1,:,:]
-#     lons,lats     = wrf_file['XLONG'][0,:,:], wrf_file['XLAT'][0,:,:]
-#     wrf_file.close()
-#     return (end_rain_nc - start_rain_nc, lons,lats)
-
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 def wrf_precipitation(start_file_path,  end_file_path=None,
                       start_timestep=0, end_timestep=-1,
@@ -117,7 +107,150 @@ def wrf_precipitation(start_file_path,  end_file_path=None,
     return(total,lons,lats)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    # Was part of the wrf_precipitation function before I realized It was unnecessary and the three lines under each if statement could just be copied into the main function directly
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+def plotting(
+             lons=None,lats=None,
+             plotted=None,
+             contour_range=None,
+             tick_range=None,
+             colorbar=True,
+             cmap='viridis',
+             extent=None,
+             title="",
+             save_path=None,
+             projection = ccrs.PlateCarree(),
+             land_sea=False,
+             patch = None,
+             ):
+    
+    """
+    This is my universal contour-fill plotting function.  I largely use it when I'm plotting a variable from WRF files, but
+    it'll handle any 2d variable that you provide lat and lons for.  
+    Each argument is optional because I also use this to create a generic map over a domain or to add a patch to it to identify domain regions
+    lons:          Array.               If unspecified it'll show the general global map from cartopy.  You can use the extent argument to zoom in too.  
+    lats:          Array.               Same as lons but for latitude.  If you specify one you should specify the other
+    plotted:       Array.               The 2d array for whatever variable you wwant to plot the contour graphic for
+    contour_range: 3-item list.         [start, end, increment], [0,1005,100].  Sets the contour range for the contour fill for whatever. from a start to an end at an increment. If you have a "plotted" argument, you need to specify this and tick_range
+    tick_range:    3-item list.         Functions the same as the contour_range, but this one specifies the colorbar tick range.
+    colorbar:      Truth statemet.      True=colorbar is plotted, false it is not.  Will only show if plotted!=None
+    cmap:          string.              Specify which colormap you want.
+    extent:        4-item list.         [left, right, bottom, top].  Sets the extent of the grpahic, but doesn't alter data in any way.  without it, the graph defaults the extents to the edges of the plotted data
+    title:         string.              Sets the title of the graph if desired.
+    save_path:     1- or 2-item list.   [path to directory to save(e.g., r"F:\MSD_2096_middle"), file name without .png(e.g., file_name)]. the example would result in a file saved as r"F:\MSD_2096_middle/file_name.png".  if only a one item list, it must be the directory path and the function will save the files name as the graphic title.
+    projection:    cartopy prjoection.  Defaults to Plate Carree, but this can be specified 
+    land_sea:      Truth statement.     If set to True, the land and sea made by cartopy will have colors. usually not useful for a contour plot, but when making a generic map or for including patches it can add a good look to the graphic.  This is just an aesthetics options
+    patch:         4-item list.         [left, right, bottom, top].  function calculates the necessary height and width automatically when you provide the edge inputs.  for user input purposes, this operates exactly like the extent argument.  This applies a red patch.  as it stands now you'll need to manually alter the function to change the colors
+    """
+    
+    
+    #imports
+    import matplotlib.pyplot as plt
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+    import numpy as np
+    import matplotlib.patches as mpatches
+    
+    #Set the more static variables
+    title = title
+    lons,lats = lons,lats
+    
+    #Set the ticks and contours.  if you're 
+    if contour_range !=None:
+        contour_range = np.arange(contour_range[0],contour_range[1],contour_range[2])
+    if tick_range != None:
+        tick_range = np.arange(tick_range[0],tick_range[1],tick_range[2])
+        
+    #Set the figure up
+    fig = plt.figure(figsize=(12,8))
+    ax = plt.axes(projection=projection)
+    
+    #plot the contour variable if presented
+    if plotted is not None:
+        plt.contourf(lons,lats,
+                     plotted,
+                     contour_range,
+                     extend='max',
+                     cmap=cmap,
+                     )
+        if colorbar==True:
+            cbar = plt.colorbar(orientation = 'horizontal',
+                                ticks = tick_range,
+                                pad = 0.05,
+                                )       
+    #set extent if wanted
+    if extent != None:
+        ax.set_extent(extent)
+        
+    #Set coastlines and if you want the land and sea to have color
+    ax.coastlines()
+    if land_sea==True:
+        ax.add_feature(cfeature.STATES, linewidth=0.4,facecolor=cfeature.COLORS['land'])
+        ax.add_feature(cfeature.OCEAN, linewidth=0.4,facecolor=cfeature.COLORS['water'])
+        #ax.add_feature(cfeature.RIVERS,edgecolor='green')
+    else:
+        ax.add_feature(cfeature.STATES, linewidth=0.4)
+        
+    #Set the patch
+    #It works by finding the lower left corner then setting a width and height.  the setting of a width is annoying so i have it set where you just give the left and right side and subtract them to get the width
+    if patch != None:
+        ax.add_patch(mpatches.Rectangle(xy=[patch[0],patch[2]],
+                                            width=patch[1]-patch[0],
+                                            height=patch[3]-patch[2],
+                                            edgecolor='red',
+                                            facecolor="None",
+                                            alpha=1,
+                                            linewidth=2,
+                                            transform=projection)
+                     )
+        
+    #set gridlines/latlon labels
+    g1 = ax.gridlines(draw_labels=True,linewidth=0.5,linestyle='--')
+    g1.xlabels_top=False
+    g1.ylabels_right=False
+  
+    #set title
+    ax.set_title(title)
+               
+    #save path.  will either save as the title or a specified string
+    if save_path != None and len(save_path) == 1:
+        plt.savefig(save_path+"/"+title+".png")
+    if save_path != None and len(save_path) == 2:
+        plt.savefig(save_path[0]+"/"+save_path[1]+".png")
+
+    plt.show()
+    plt.clf()
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+###Below is a commented example of using the wrf_precipitation and plotting functions in conjunction
+# from wrf_precip_plotting_functions import wrf_precipitation, plotting
+# start_file_path = r"F:\MSD_2096_middle\wrfout_d01_2096-08-01_12%3A00%3A00.nc"
+# total,lons,lats = wrf_precipitation(start_file_path,
+#                                     lat_deg_ext = [30, 50],    ##bottom, top
+#                                     lon_deg_ext = [-120, -80], ##left, right
+#                                     )
+# cont_tick = [0,2005,100]   ### often the contour and tick range are the same.  
+# plotting(lons,lats,
+#           total,
+#           cont_tick,
+#           cont_tick,
+#           )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # Below was part of the wrf_precipitation function before I realized It was unnecessary and the three lines under each if statement could just be copied into the main function directly
     # #Given a latlon extent in degrees. will find the nearest index for creating subwindows of precipication
     # #This could probably be not in function form, but oh well.
     # def find_ids(start_file_path,lat_deg_ext=None,lon_deg_ext=None):
@@ -299,141 +432,6 @@ def wrf_precipitation_two_files(file_path_start,file_path_end,start_timestep=0):
 
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-def plotting(
-             lons=None,lats=None,
-             plotted=None,
-             contour_range=None,
-             tick_range=None,
-             colorbar=True,
-             cmap='viridis',
-             extent=None,
-             title="",
-             save_path=None,
-             projection = ccrs.PlateCarree(),
-             land_sea=False,
-             patch = None,
-             ):
-    
-    """
-    This is my universal contour-fill plotting function.  I largely use it when I'm plotting a variable from WRF files, but
-    it'll handle any 2d variable that you provide lat and lons for.  
-    Each argument is optional because I also use this to create a generic map over a domain or to add a patch to it to identify domain regions
-    lons:          Array.               If unspecified it'll show the general global map from cartopy.  You can use the extent argument to zoom in too.  
-    lats:          Array.               Same as lons but for latitude.  If you specify one you should specify the other
-    plotted:       Array.               The 2d array for whatever variable you wwant to plot the contour graphic for
-    contour_range: 3-item list.         [start, end, increment], [0,1005,100].  Sets the contour range for the contour fill for whatever. from a start to an end at an increment. If you have a "plotted" argument, you need to specify this and tick_range
-    tick_range:    3-item list.         Functions the same as the contour_range, but this one specifies the colorbar tick range.
-    colorbar:      Truth statemet.      True=colorbar is plotted, false it is not.  Will only show if plotted!=None
-    cmap:          string.              Specify which colormap you want.
-    extent:        4-item list.         [left, right, bottom, top].  Sets the extent of the grpahic, but doesn't alter data in any way.  without it, the graph defaults the extents to the edges of the plotted data
-    title:         string.              Sets the title of the graph if desired.
-    save_path:     1- or 2-item list.   [path to directory to save(e.g., r"F:\MSD_2096_middle"), file name without .png(e.g., file_name)]. the example would result in a file saved as r"F:\MSD_2096_middle/file_name.png".  if only a one item list, it must be the directory path and the function will save the files name as the graphic title.
-    projection:    cartopy prjoection.  Defaults to Plate Carree, but this can be specified 
-    land_sea:      Truth statement.     If set to True, the land and sea made by cartopy will have colors. usually not useful for a contour plot, but when making a generic map or for including patches it can add a good look to the graphic.  This is just an aesthetics options
-    patch:         4-item list.         [left, right, bottom, top].  function calculates the necessary height and width automatically when you provide the edge inputs.  for user input purposes, this operates exactly like the extent argument.  This applies a red patch.  as it stands now you'll need to manually alter the function to change the colors
-    """
-    
-    
-    #imports
-    import matplotlib.pyplot as plt
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    import numpy as np
-    import matplotlib.patches as mpatches
-    
-    #Set the more static variables
-    title = title
-    lons,lats = lons,lats
-    
-    #Set the ticks and contours.  if you're 
-    if contour_range !=None:
-        contour_range = np.arange(contour_range[0],contour_range[1],contour_range[2])
-    if tick_range != None:
-        tick_range = np.arange(tick_range[0],tick_range[1],tick_range[2])
-        
-        
-    #Set the figure up
-    fig = plt.figure(figsize=(12,8))
-    ax = plt.axes(projection=projection)
-    
-    
-    #plot the contour variable if presented
-    if plotted is not None:
-        plt.contourf(lons,lats,
-                     plotted,
-                     contour_range,
-                     extend='max',
-                     cmap=cmap,
-                     )
-        if colorbar==True:
-            cbar = plt.colorbar(orientation = 'horizontal',
-                                ticks = tick_range,
-                                pad = 0.05,
-                                )
-            
-    #set extent if wanted
-    if extent != None:
-        ax.set_extent(extent)
-        
-        
-    #Set coastlines and if you want the land and sea to have color
-    ax.coastlines()
-    if land_sea==True:
-        ax.add_feature(cfeature.STATES, linewidth=0.4,facecolor=cfeature.COLORS['land'])
-        ax.add_feature(cfeature.OCEAN, linewidth=0.4,facecolor=cfeature.COLORS['water'])
-        #ax.add_feature(cfeature.RIVERS,edgecolor='green')
-    else:
-        ax.add_feature(cfeature.STATES, linewidth=0.4)
-        
-        
-    #Set the patch
-    #It works by finding the lower left corner then setting a width and height.  the setting of a width is annoying so i have it set where you just give the left and right side and subtract them to get the width
-    if patch != None:
-        ax.add_patch(mpatches.Rectangle(xy=[patch[0],patch[2]],
-                                            width=patch[1]-patch[0],
-                                            height=patch[3]-patch[2],
-                                            edgecolor='red',
-                                            facecolor="None",
-                                            alpha=1,
-                                            linewidth=2,
-                                            transform=projection)
-                     )
-        
-        
-    #set gridlines/latlon labels
-    g1 = ax.gridlines(draw_labels=True,linewidth=0.5,linestyle='--')
-    g1.xlabels_top=False
-    g1.ylabels_right=False
-    
-    
-    #set title
-    ax.set_title(title)
-
-
-    #save path.  will either save as the title or a specified string
-    if save_path != None and len(save_path) == 1:
-        plt.savefig(save_path+"/"+title+".png")
-    if save_path != None and len(save_path) == 2:
-        plt.savefig(save_path[0]+"/"+save_path[1]+".png")
-
-
-    plt.show()
-    plt.clf()
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-###Below is a commented example of using the wrf_precipitation and plotting functions in conjunction
-# from wrf_precip_plotting_functions import wrf_precipitation, plotting
-# start_file_path = r"F:\MSD_2096_middle\wrfout_d01_2096-08-01_12%3A00%3A00.nc"
-# total,lons,lats = wrf_precipitation(start_file_path,
-#                                     lat_deg_ext = [30, 50],    ##bottom, top
-#                                     lon_deg_ext = [-120, -80], ##left, right
-#                                     )
-# cont_tick = [0,2005,100]   ### often the contour and tick range are the same.  
-# plotting(lons,lats,
-#           total,
-#           cont_tick,
-#           cont_tick,
-#           )
 
 
 
