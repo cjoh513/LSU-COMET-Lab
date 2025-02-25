@@ -166,6 +166,7 @@ def obs_var (file_path,
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Getting Precip Variable"
+#An older version of the previous function
 def obs_precipitation(file_path,precip_variable_name):
     file = Dataset(file_path)
     lons,lats = file['lon'][:],file['lat'][:]
@@ -182,6 +183,7 @@ def obs_precipitation(file_path,precip_variable_name):
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Plotting"
+#Older, less extensive version of the same function on the "wrfout_plotting_functions.py" file
 def obs_plotting(lons,lats,
                  plotted,
                  contour_range,
@@ -292,10 +294,3 @@ def nearest_2d(lat_array,lon_array,ll_coords):
     return idx
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 
-def obs_find_ids(file_path, dims, lat_deg_ext=None, lon_deg_ext=None):
-    from netCDF4 import Dataset
-    
-    
-    
-    if lat_deg_ext !=None:
-        bottom_lat,top_lat = lat_deg_ext[0],lat_deg_ext[1]
