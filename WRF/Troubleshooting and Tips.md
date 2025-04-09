@@ -85,6 +85,13 @@ The "LD_LIBRARY_PATH" needed to be set by the following: "setenv LD_LIBRARY_PATH
 This allows for ungrib to locate the path to the lib folder.
 
 
+# Segmentation fault
+Program received signal SIGSEGV: Segmentation fault - invalid memory reference.  
+Often a CFL error, but it might not flag the CFL keyword in the error files.  These errors also tend to crop up well into a simulation so it can be frusterating to deal with.  
+[THIS](https://forum.mmm.ucar.edu/threads/sigsegv-segmentation-fault-invalid-memory-reference.8508/) post contains useful steps to try.   
+Most often I have solved this error by increasing the "epssm" variable in the namelist.input (e.g., 0.4->0.9).  
+The epssm variable relates to vertical wave propogation. If your simulation takes place over complex mountainous terrain or includes some other rapid vertical transport (Hurricanes), a CFL error could be the problem in disguise.  Most recently, this error occurred for me because I had a simulation in December over the continental United States.  A synoptic system was crossing the Rocky Mountains at the time the error threw.  By raising the epssm, the error resolved itself.
+
 # If you delete your Vtable
 
 If you erase the Vtable here you can find a fast copy
