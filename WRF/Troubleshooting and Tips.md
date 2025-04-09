@@ -8,7 +8,8 @@
 2. [Errors and Solutions](#errors-and-solutions)  
    - [gfortran: error: wrf.o: No such file or directory](#gfortran-error-wrfo-no-such-file-or-directory)  
    - [gcc: error: unrecognized command-line option '-V'](#gcc-error-unrecognized-command-line-option--v)  
-   - [error while loading shared libraries: libpng12.so.0](#error-while-loading-shared-libraries-libpng12so0)  
+   - [error while loading shared libraries: libpng12.so.0](#error-while-loading-shared-libraries-libpng12so0)
+   - [Segmentation Fault](#Segmentation-fault)
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 
@@ -85,7 +86,7 @@ The "LD_LIBRARY_PATH" needed to be set by the following: "setenv LD_LIBRARY_PATH
 This allows for ungrib to locate the path to the lib folder.
 
 
-# Segmentation fault
+# Segmentation Fault
 Program received signal SIGSEGV: Segmentation fault - invalid memory reference.  
 Often a CFL error, but it might not flag the CFL keyword in the error files.  These errors also tend to crop up well into a simulation so it can be frusterating to deal with.  
 [THIS](https://forum.mmm.ucar.edu/threads/sigsegv-segmentation-fault-invalid-memory-reference.8508/) post contains useful steps to try.   
