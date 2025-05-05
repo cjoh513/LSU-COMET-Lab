@@ -21,20 +21,21 @@ def wrf_precipitation(start_file_path,  end_file_path=None,
                       start_timestep=0, end_timestep=-1,
                       lat_id_ext=None,  lon_id_ext=None,
                       lat_deg_ext=None, lon_deg_ext=None,
-                      ):     ###This version means I don't have to manually do the I_rain values each time I plot wrf precip. It checks the file for it
+                      ):     
     """"
     This is specifically for collecting WRF precipitation.  This also means that it requires a 2-dimensional lat lon. 
+    This function also automatically identifies if you have parameterized and non-parameterized precipitation.
     If You're looking for a generic netCDF array-variable grab (or don't have a 2D lat/lon) try the top function in the "nonwrf_plotting_functions.py" file.
-    Extracts Accumulated Precipitation and lat lon grid for the precipitation varibale from wrfout.nc files between two timesteps.  You can use the below arguments to create a window within the array (e.g., if you only wanted to see a rectangular portion of the southeastern U.S. instead of the entire CONUS array)
+    Extracts Accumulated Precipitation and lat lon grid for the precipitation varibale from wrfout.nc files between two timesteps.  You can use the below arguments to create a window within the array (e.g., if you only wanted to see a small rectangular portion of the area instead of the full domain)
     start_file_path: Required. The first file to extract precipitation from.  e.g., start_file_path = r"F:\MSD_2096_middle\wrfout_d01_2096-08-01_12%3A00%3A00.nc"
     end_file_path:   Optional. If unspecified, defaults to the same file path as the start_file_path
     start_timestep:  Optional. If unspecified, defaults to the first timestep of the file
-    end_timestep:    Optional. If unspecified, defaults to the last timestep of the start_file or end_file (if specified) file
-    lat_id_ext:      Optional. Allows for extraction of a horizontal slice between two latitude indexes. (e.g., lat_id_ext=[bottom id, top id], or lat_id_ext=[93,134]).  If unspecified, defaults to collecting every lat value
+    end_timestep:    Optional. If unspecified, defaults to the last timestep of the start_file or end_file (if specified)
+    lat_id_ext:      Optional. Allows for extraction of a horizontal slice between two latitude indexes. (e.g., lat_id_ext=[bottom id, top id], or lat_id_ext=[93,134]).  If unspecified, defaults to collecting the full lat extent
     lon_id_ext:      Optional. Same as lat_id_ext except for longitude instead of latitude
     lat_deg_ext:     Optional. Providing a degrees north latitude value, a sub-function finds the nearest latitude index/cell. e.g., lat_deg_ext=[bottom degree North, top degree North], or lat_deg_ext = [30.2735, 48.7]
-    My recommendation: if you're creating a sub-window of an array and you're using a dataset with non-uniform grid cells (e.g., Daymet or anything on a Lamber-conformal conic grid), using the indexes is preferable than the degree search.  
-    This is because the varying 
+    lon_deg_ext:     Optional.  Same as lat_deg_ext, except for longitude.
+    My recommendation: if you're creating a sub-window of an array and you're using a dataset with non-uniform grid cells (e.g., Daymet or anything on a Lamber-conformal conic grid), using the indexes is preferable than the degree search. 
     """    
     #imports
     from netCDF4 import Dataset
@@ -106,6 +107,7 @@ def wrf_precipitation(start_file_path,  end_file_path=None,
     end_file.close()
     return(total,lons,lats)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
+#Example: see the plotting function below for an example
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 def plotting(
@@ -114,6 +116,7 @@ def plotting(
              contour_range=None,
              tick_range=None,
              colorbar=True,
+             cbar_extent='max',
              cmap='viridis',
              extent=None,
              title="",
@@ -121,18 +124,19 @@ def plotting(
              projection = ccrs.PlateCarree(),
              land_sea=False,
              patch = None,
+             grid_labels = [True, False, True, False]
              ):
     
     """
-    This is my universal contour-fill plotting function.  I largely use it when I'm plotting a variable from WRF files, but
-    it'll handle any 2d variable that you provide lat and lons for.  
+    This is my universal contour-fill plotting function.  I largely use it when I'm plotting a variable from WRF files, but it'll handle any 2d variable that you provide lat and lons for.  
     Each argument is optional because I also use this to create a generic map over a domain or to add a patch to it to identify domain regions
     lons:          Array.               If unspecified it'll show the general global map from cartopy.  You can use the extent argument to zoom in too.  
     lats:          Array.               Same as lons but for latitude.  If you specify one you should specify the other
-    plotted:       Array.               The 2d array for whatever variable you wwant to plot the contour graphic for
+    plotted:       Array.               The 2d array for whatever variable you want to plot the contour graphic for
     contour_range: 3-item list.         [start, end, increment], [0,1005,100].  Sets the contour range for the contour fill for whatever. from a start to an end at an increment. If you have a "plotted" argument, you need to specify this and tick_range
     tick_range:    3-item list.         Functions the same as the contour_range, but this one specifies the colorbar tick range.
     colorbar:      Truth statemet.      True=colorbar is plotted, false it is not.  Will only show if plotted!=None
+    cbar_extent:   String.              'min', 'max', 'both'.  Specifies which sides of the colorbar show the extending arrows indicating values beyond the color bar
     cmap:          string.              Specify which colormap you want.
     extent:        4-item list.         [left, right, bottom, top].  Sets the extent of the grpahic, but doesn't alter data in any way.  without it, the graph defaults the extents to the edges of the plotted data
     title:         string.              Sets the title of the graph if desired.
@@ -140,9 +144,8 @@ def plotting(
     projection:    cartopy prjoection.  Defaults to Plate Carree, but this can be specified 
     land_sea:      Truth statement.     If set to True, the land and sea made by cartopy will have colors. usually not useful for a contour plot, but when making a generic map or for including patches it can add a good look to the graphic.  This is just an aesthetics options
     patch:         4-item list.         [left, right, bottom, top].  function calculates the necessary height and width automatically when you provide the edge inputs.  for user input purposes, this operates exactly like the extent argument.  This applies a red patch.  as it stands now you'll need to manually alter the function to change the colors
+    grid_labels:   4-item truth list.   [left, right, bottom, top].  Which sides of the map you want lat/lon labels on.  Defaults to bottom and left
     """
-    
-    
     #imports
     import matplotlib.pyplot as plt
     import cartopy.crs as ccrs
@@ -169,7 +172,7 @@ def plotting(
         plt.contourf(lons,lats,
                      plotted,
                      contour_range,
-                     extend='max',
+                     extend=cbar_extent,
                      cmap=cmap,
                      )
         if colorbar==True:
@@ -204,9 +207,11 @@ def plotting(
                      )
         
     #set gridlines/latlon labels
-    g1 = ax.gridlines(draw_labels=True,linewidth=0.5,linestyle='--')
-    g1.xlabels_top=False
-    g1.ylabels_right=False
+    g1 = ax.gridlines(draw_labels=True,linewidth=0.5,linestyle='--') #[L, R, B, T]
+    g1.xlabels_top=    grid_labels[3]
+    g1.ylabels_right=  grid_labels[1]
+    g1.xlabels_bottom= grid_labels[2]
+    g1.ylabels_left=   grid_labels[0]
   
     #set title
     ax.set_title(title)
@@ -229,9 +234,9 @@ def plotting(
 #                                     )
 # cont_tick = [0,2005,100]   ### often the contour and tick range are the same.  
 # plotting(lons,lats,
-#           total,
-#           cont_tick,
-#           cont_tick,
+#           plotted=total,
+#           contour_range = cont_tick,
+#           tick_range = cont_tick,
 #           )
 
 
