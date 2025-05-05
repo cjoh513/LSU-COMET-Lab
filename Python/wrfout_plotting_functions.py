@@ -852,9 +852,8 @@ def multi_file_prcp_timestep (dir_path,
 
 
 
-from netCDF4 import Dataset
-import numpy as np
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def find_wrf_ids(start_file_path,lat_deg_ext,lon_deg_ext):
     """
     Given a file path,
@@ -872,35 +871,10 @@ def find_wrf_ids(start_file_path,lat_deg_ext,lon_deg_ext):
     left_id,right_id = np.where(left_dist == left_dist.min())[1][0],np.where(right_dist == right_dist.min())[1][0]  ### [1][0] lons
     bottom_id,top_id = np.where(bottom_dist == bottom_dist.min())[0][0],np.where(top_dist == top_dist.min())[0][0]  ### [0][0] lats
     return(left_id,right_id,bottom_id,top_id)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-
-
-
-
-
-
-
-
-    
-
-# "Test"
-# extent = [-93,-88.5,28.5,32.4]            ###NOLA        ##extent = [-91,-89,30,31.15]            ###NOLA zoom in
-                                                            ###  long cells = 63:127    lat cells = 93: 134
-# wrf_file_path = r"E:/nu-wrf_stuff/Outputs/NOLA_2007/final_outputs/Chem_Urban_NOLA/wrfout_d02_2007-07-07_00%3A00%3A00.nc"
-# sim_precip = wrf_precipitation(wrf_file_path,24)[0]
-# lons,lats = wrf_precipitation(wrf_file_path,24)[1],wrf_precipitation(wrf_file_path,24)[2]
-
-# plotting(lons,lats,               ### set your lon lat values
-#          sim_precip,              ### set your precip to be plotted
-#          np.arange(0,61,2),       ### set your contour range, (min, max, scaling)
-#          np.arange(0,61,2),       ### set your ticks, often this is the same as contour, but at a different scaling so the numbers to get jumbled
-#          extent,                  ### set the visual box extent you want.  
-#          "Chem Urban Precip",     #### set your title
-#          )
-
-
-
-"Getting a series ofwrf out files base on date range"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Getting a series of wrf out files base on date range"
 def wrf_daterange (path,start_date_str,end_date_str):
     """    
     path:                 String:         Required.  The path to the directory containing your wrf files.  Files are assumed to be in wrfout_d01_2013-01-01_00%3A00%3A00.nc format
@@ -908,7 +882,7 @@ def wrf_daterange (path,start_date_str,end_date_str):
     end_date_str:         String:         Required.  Same as start_date_str format.  The function actually stops the day before the end date so if you set an end date of 2010-12-31, it would only pull files up to 2010-12-30
     
     Example wrf out: wrfout_d01_2013-01-01_00%3A00%3A00.nc
-    Outputs a list of wrf filepaths based on a set date range.  It will not be in any reasonable order unfortunately.  You can blame os.lsitdir
+    Outputs a list of wrf filepaths based on a set date range.  By default, It will not be in any reasonable order unfortunately.  You can blame os.lsitdir for that, but we include a .sort() bit that does sort the list so the returned list will be sorted for you
     """
     
     import os
@@ -936,32 +910,42 @@ def wrf_daterange (path,start_date_str,end_date_str):
 #end_date   = "2018-12-31"
 #files = wrf_daterange(path,start_date,end_date)
 #print(files)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
-
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "converting wrf XTIME into human readable"
 def minutes_to_datetime(minutes_since_epoch,
-                        epoch_start=[2013,1,1]
+                        epoch_start=[1970,1,1]
                         ):
+"""
+Take whatever values you want to identify from XTIME and plug it into this function.  Usually the "epoch_start" will be the start of your simulation
+Returns a datetime object
+
+minutes_since_epoch:     int/float      some incomprehensible number that will be something like minutes since some time.
+epoch_start:             3-item list    [year,month,day] the {some time} of "minutes since {some time}".
+"""
+                          
     import datetime
     start = datetime.datetime(epoch_start[0],epoch_start[1],epoch_start[2])
     time_delta = datetime.timedelta(minutes=minutes_since_epoch)
     return(start+time_delta)
-#test = minutes_to_datetime(2076840.) ##will be some time in 2016
+#example = minutes_to_datetime(2076840., epoch_start=[2013,1,1]) ##will be some time in 2016
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
-
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Finding the index for a given timestep within a file"
 def find_time_idx(path,
                   epoch_start = [2013,1,1],
                   timestep = "00"
                   ):    
     """
+    You give a timestep in UTC you want to find within a file and it'll provide you the timestep index.
+    This is useful for when you have a lot of daily output files, but you've run into the annoying WRF situation where it transitions from outputting at 00z to 06z
     path          String         input path for a file.
     epoch_start   3-item list    e.g., [YYYY,M,D], [2013,6,31] the 'timesince...' part of the function. used in the sub-function
-    timestep      String         2 item string.  This is the timestep you're looking for
+    timestep      String         2 item string.  This is the timestep you're looking for.  use a leading zero if below 10 (e.g., 01, 02, 03, ... 10, 11, 12)
     """    
     import datetime
     from netCDF4 import Dataset
@@ -985,10 +969,12 @@ def find_time_idx(path,
             idx = np.where(file['XTIME'][:] == time)[0][0]
     file.close()
     return(idx)
-#test_path = r"P:\outputs\PR_nodust_outputs\PR_historic_no_dust_files\PR_no_dust_historical_d01\wrfout_d01_2018-05-07_06%3A00%3A00.nc"
-#index = find_time_idx(test_path)
-#print(index)
 
+#Example:
+#test_path = r"P:\outputs\PR_nodust_outputs\PR_historic_no_dust_files\PR_no_dust_historical_d01\wrfout_d01_2018-05-07_06%3A00%3A00.nc"
+#index = find_time_idx(test_path, timestep="00")
+#print(index)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 
