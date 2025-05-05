@@ -390,59 +390,6 @@ def prcp_timestep(file_path, start_time, start_timestep=0, end_timestep=None,lat
 
 
 
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Unecessary now that the wrf_precipitation can handle an optional second file"
-def wrf_precipitation_two_files(file_path_start,file_path_end,start_timestep=0):     ###This version means I don't have to manually do the I_rain values each time. It checks the file for it
-    file_start = Dataset(file_path_start)
-    file_end   = Dataset(file_path_end)
-    lons,lats = file_start['XLONG'][0,:,:], file_start['XLAT'][0,:,:]
-    if 'I_RAINNC' in file_start.variables:
-        print("I_RAINNC is in the file")
-        start_irain_nc = file_start['I_RAINNC'][start_timestep,:,:]   #Buckets non param precip
-        start_rain_nc  = file_start[  'RAINNC'][start_timestep,:,:]   #non param precip
-        start_irain_c  = file_start[ 'I_RAINC'][start_timestep,:,:]   #buckets param precip
-        start_rain_c   = file_start[   'RAINC'][start_timestep,:,:]   # param precip
-        start_nc_total = ((start_irain_nc * 100) + start_rain_nc)
-        start_c_total  = ((start_irain_c * 100) + start_rain_c)
-        start_total = start_nc_total + start_c_total
-        
-        end_irain_nc = file_end['I_RAINNC'][-1,:,:]
-        end_rain_nc  = file_end[  'RAINNC'][-1,:,:]
-        end_irain_c  = file_end[ 'I_RAINC'][-1,:,:]
-        end_rain_c   = file_end[   'RAINC'][-1,:,:]
-        end_nc_total = ((end_irain_nc * 100) + end_rain_nc)
-        end_c_total  = ((end_irain_c * 100) + end_rain_c)
-        end_total = end_nc_total + end_c_total
-        
-        total = end_total - start_total
-        
-    else: 
-        start_rain_nc = file_start['RAINNC'][start_timestep,:,:]
-        start_rain_c  = file_start[ 'RAINC'][start_timestep,:,:]
-        start_total = start_rain_nc + start_rain_c
-        
-        end_rain_nc = file_end['RAINNC'][-1,:,:]
-        end_rain_c  = file_end[ 'RAINC'][-1,:,:]
-        end_total = end_rain_nc + end_rain_c
-        
-        total = end_total - start_total
-        
-    file_start.close()
-    file_end.close()
-    return(total,lons,lats)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-
-
-
-
-
-
-
-
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Creating NC File"
 def new_nc_wrf(new_file_path,
