@@ -945,3 +945,98 @@ def find_wrf_ids(start_file_path,lat_deg_ext,lon_deg_ext):
 #          extent,                  ### set the visual box extent you want.  
 #          "Chem Urban Precip",     #### set your title
 #          )
+
+
+
+"Getting a series ofwrf out files base on date range"
+def wrf_daterange (path,start_date_str,end_date_str):
+    """    
+    path:                 String:         Required.  The path to the directory containing your wrf files.  Files are assumed to be in wrfout_d01_2013-01-01_00%3A00%3A00.nc format
+    start_date_str:       String:         Required.  assumed to be in YYYY-MM-DD format
+    end_date_str:         String:         Required.  Same as start_date_str format.  The function actually stops the day before the end date so if you set an end date of 2010-12-31, it would only pull files up to 2010-12-30
+    
+    Example wrf out: wrfout_d01_2013-01-01_00%3A00%3A00.nc
+    Outputs a list of wrf filepaths based on a set date range.  It will not be in any reasonable order unfortunately.  You can blame os.lsitdir
+    """
+    
+    import os
+    from datetime import datetime
+    
+    #Setting up the input variables
+    files = os.listdir(path)
+    start_date = datetime.strptime(start_date_str,"%Y-%m-%d")
+    end_date = datetime.strptime(end_date_str,"%Y-%m-%d")
+    
+    #creating list of the files in the desired range.
+    file_range = []
+    for file in files:
+        date_to_check_str = file.split("_")[2]                           ###wrfout_d01_2013-01-01_00%3A00%3A00.nc would be just the 2013-01-01 portion
+        date_to_check = datetime.strptime(date_to_check_str,"%Y-%m-%d")  #converts string to datetime value
+        if start_date <= date_to_check < end_date:                       #makes sure that it's the start date or beyond and then the day before the last date
+            file_range.append(os.path.join(path,file))                   #appends the path with the file: p:/outputs/PR_dust_outputs/PR_dust_historic/PR_dust_historic_d01/outputs\\wrfout_d01_2014-12-24_06%3A00%3A00.nc
+        else:
+            pass                                                         #so if the file it's iterated over is not in the date range it does nothing    
+    file_range.sort(key=lambda date: datetime.strptime(date.split("_")[2],"%Y-%m-%d"))  #sorts the dates into the proper order
+    return(file_range)
+#example
+#path = r"p:/outputs/PR_dust_outputs/PR_dust_historic/PR_dust_historic_d01/outputs"
+#start_date = "2013-12-31"
+#end_date   = "2018-12-31"
+#files = wrf_daterange(path,start_date,end_date)
+#print(files)
+
+
+
+
+"converting wrf XTIME into human readable"
+def minutes_to_datetime(minutes_since_epoch,
+                        epoch_start=[2013,1,1]
+                        ):
+    import datetime
+    start = datetime.datetime(epoch_start[0],epoch_start[1],epoch_start[2])
+    time_delta = datetime.timedelta(minutes=minutes_since_epoch)
+    return(start+time_delta)
+#test = minutes_to_datetime(2076840.) ##will be some time in 2016
+
+
+
+
+"Finding the index for a given timestep within a file"
+def find_time_idx(path,
+                  epoch_start = [2013,1,1],
+                  timestep = "00"
+                  ):    
+    """
+    path          String         input path for a file.
+    epoch_start   3-item list    e.g., [YYYY,M,D], [2013,6,31] the 'timesince...' part of the function. used in the sub-function
+    timestep      String         2 item string.  This is the timestep you're looking for
+    """    
+    import datetime
+    from netCDF4 import Dataset
+    
+    #sub function to get the conversion
+    def minutes_to_datetime(minutes_since_epoch,
+                            epoch_start
+                            ):
+        """
+        minutes since epoch   interger     the outer function will automatically find these for you in XTIME
+        epoch_start           3-item list  uses the list provided in the outerfunction so set it when making arguments for the outer function.
+        """
+        #import datetime
+        start = datetime.datetime(epoch_start[0],epoch_start[1],epoch_start[2])
+        time_delta = datetime.timedelta(minutes=minutes_since_epoch)
+        return(start+time_delta)   ###returns a datetime object in the form of 2018-05-07 18:00:00  We will convert it to a string and then check the two digits for the hours (in this case 18Z)
+
+    file = Dataset(path)
+    for time in file['XTIME'][:]:
+        if str(minutes_to_datetime(int(time),epoch_start)).split(" ")[1][0:2] == timestep:   #if the first two digits on the timesteps hour (00, 06, 12, 18) match your desired timestep it notes the index
+            idx = np.where(file['XTIME'][:] == time)[0][0]
+    file.close()
+    return(idx)
+#test_path = r"P:\outputs\PR_nodust_outputs\PR_historic_no_dust_files\PR_no_dust_historical_d01\wrfout_d01_2018-05-07_06%3A00%3A00.nc"
+#index = find_time_idx(test_path)
+#print(index)
+
+
+
+
