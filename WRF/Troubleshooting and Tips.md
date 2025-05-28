@@ -100,16 +100,16 @@ If you choose a high number of processors are are met with a "the domain size is
 For example.  
 ![image](https://github.com/user-attachments/assets/57a513a8-1943-4b5f-9380-8c29bb6786c5)  
 This error was thrown for a rectangular domain that needed at least 100 processors to run in a reasonable time frame.  
-The solution is to add "nproc_x" and "nproc_y" to the "&domains" section of your namelist.input (AFTER YOU'VE RUN real.exe).  
-"nproc_x" and "nproc_y" determine the decomposition ratio for your domain, which is to say it alots your domain gridcells per processor.   
-An important rule is that "Total Processors = nproc_x * nproc_y".  
-In the above example, WRF by default split the total processors (100) evenly among where nproc_x=10 and nproc_y=10.  
-The problem is that each processor needs to be running at least 10 grid cells and as it stands, each processor runs 25 grid cells in the x-direction and only 6 grid cells in the y-direction.  
-Because each processor only runs 6 grid cells in the y-direction, we get an error.  So we can reduce the nproc_y value to increase how many grid cells each processor will take ownace of in the y-direction.  
-Keep in mind, that "Total Processors = nproc_x * nproc_y" and if we decrease nproc_y, we must increase nproc_x.  
-The result is that we can set "nproc_x=20" and "nproc_y=5".  
-This reduces the number of processors in the y-direction, allowing each processor to have at least 10 gridcells, while 20*5=100.  
-![image](https://github.com/user-attachments/assets/812f236c-0805-4fe1-9594-0a25d052b8df).  
+* The solution is to add "nproc_x" and "nproc_y" to the "&domains" section of your namelist.input (AFTER YOU'VE RUN real.exe).  
+* "nproc_x" and "nproc_y" determine the decomposition ratio for your domain, which is to say it alots your domain gridcells per processor.   
+* An important rule is that "Total Processors = nproc_x * nproc_y".  
+* In the above example, WRF by default split the total processors (100) evenly among where nproc_x=10 and nproc_y=10.  
+* The problem is that each processor needs to be running at least 10 grid cells and as it stands, each processor runs 25 grid cells in the x-direction and only 6 grid cells in the y-direction.  
+* Because each processor only runs 6 grid cells in the y-direction, we get an error.  So we can reduce the nproc_y value to increase how many grid cells each processor will take ownace of in the y-direction.  
+* Keep in mind, that "Total Processors = nproc_x * nproc_y" and if we decrease nproc_y, we must increase nproc_x.  
+* The result is that we can set "nproc_x=20" and "nproc_y=5".  
+* This reduces the number of processors in the y-direction, allowing each processor to have at least 10 gridcells, while 20*5=100.  
+* ![image](https://github.com/user-attachments/assets/812f236c-0805-4fe1-9594-0a25d052b8df).  
 
 
 
