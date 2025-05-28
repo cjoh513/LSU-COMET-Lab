@@ -97,6 +97,7 @@ The epssm variable relates to vertical wave propogation. If your simulation take
 # Domain Size Too Small for This Many Processors for One Domain
 Sometimes your domain will be an odd shape or you need more processors than the default wrf formula allows (such as if you were running chemistry).  
 If you choose a high number of processors are are met with a "the domain size is too small for this many processors, or the decomposition aspect ratio is poor" error, nproc_x and nproc_y are possible solutions.  
+More detailed information, and what to do if you have multiple domains, can be found in the nproc_x_nproc_y.md.
 For example.  
 ![image](https://github.com/user-attachments/assets/57a513a8-1943-4b5f-9380-8c29bb6786c5)  
 This error was thrown for a rectangular domain that needed at least 100 processors to run in a reasonable time frame.  
