@@ -161,6 +161,7 @@ type the following commands:
 ### Installing zlib
 From the "build-wrf/libraries" directory, type the following commands:
 * wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
+* tar xzvf zlib-1.2.11.tar.gz
 * cd zlib-1.2.11
 * ./configure --prefix=$DIR/grib2
 * make
