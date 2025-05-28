@@ -1,0 +1,40 @@
+Running a simulation is easy, but in a efficient way is complex, specially when you have to run a simulations for dust that is comming from Africa until Puerto Rico or other places in America. Mostly of the times this domains are rectangular instead of square (which WRF love).
+
+For this reason is important not to run with the same processors for x and y, because in this case the domains are rectangular. When you select to run with 16 cores, WRF is going to split 4 for x (nproc_x = 4) and 4 for y (nproc_y), because 4 is the square root of 16.
+
+For example, we have this domains
+
+```sh
+&domains
+ max_dom                             = 3
+ e_we                                = 221, 65, 57
+ e_sn                                = 61, 45, 37
+```
+In this example I had to run just with 4 processors, but we can use more.
+
+We have to have in  mind the next
+
+1) For each processor WRF needs no less than 10 grids per cell
+2) If you select a nproc_x and nproc_y, these processors are going to be for the whole 3 domains
+
+Based on the previous rule, the minimum value fow e_we (that is related with x or nproc_x) is 57, where the tens are 5 and the minimum value for e_sn (that is related with y or nproc_y) is 37, where the tens are 3. That means that the best idea to chose the processor is
+
+ nproc_x  = 5,
+ nproc_y  = 3,
+
+Which as result is using 15 processors
+
+But, if we want to be more eficient you can aproximate the values to the next tens
+
+```sh
+&domains
+ max_dom                             = 3
+ e_we                                = 221, 65, 60
+ e_sn                                = 61, 45, 40
+```
+In this way you can use
+
+ nproc_x  = 6,
+ nproc_y  = 4,
+
+Which as result is using 24 processors
