@@ -1,3 +1,4 @@
+# THIS IS NOT OUR SCRIPT.  This was uploaded by an administrator of the WRF forums Kwerner at the following link https://forum.mmm.ucar.edu/threads/choosing-an-appropriate-number-of-processors.5082/
 # This script finds the largest number of processors and nodes
 # you can use, based on the number of grid points in the i/j directions
 # on your domain. 
