@@ -3,6 +3,11 @@
 Running a WRF simulation is straightforward, but doing it **efficiently**—especially when simulating dust transport from Africa to Puerto Rico or other parts of the Americas—is much more complex. These long-distance domains are often **rectangular**, rather than square (which WRF prefers).
 
 ---
+## Note
+
+When you run real (`./real.exe`), you must comment the lines of `nproc_x` and `nproc_y` like this `!nproc_x` and `!nproc_y` in the namelist.input, in other way it will produce an error.
+
+---
 
 ## Why Processor Decomposition Matters
 
