@@ -320,6 +320,7 @@ This step will build the WRF-Preprocessing System.  It will be very similar to t
 
 
 *  Navigate into the WPS-4.2 directory with "cd WPS-4.2" and type:
+  *  export WRF_DIR=[path to build-wrf]/build-wrf/WRF-4.2.2
   *  ./configure
 *  There will be 40 options for compilers to use for WPS.  We want to compile WPS with the same compiler chosen in the Building WRF step.  For myself—because we used gfortran, want the ability to use clusters on LSU systems, and nest simulations—we are choosing the "Linux x86_64, gfortran (dmpar)" option.
 *  ![image](https://github.com/user-attachments/assets/9eac0e28-2819-4265-9b9b-3637e58b857f)
