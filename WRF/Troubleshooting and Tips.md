@@ -11,6 +11,7 @@
    - [error while loading shared libraries: libpng12.so.0](#error-while-loading-shared-libraries-libpng12so0)
    - [Segmentation Fault](#Segmentation-fault)
    - [Domain Size Too Small for This Many Processors for One Domain](#Domain-Size-Too-Small-for-This-Many-Processors-for-One-Domain)
+   - [Problems of SST of 0 values on the met_em files](#Problems-of-SST-of-0-values-on-the-met_em-files)
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 
@@ -113,7 +114,14 @@ This error was thrown for a rectangular domain that needed at least 100 processo
 * ![image](https://github.com/user-attachments/assets/812f236c-0805-4fe1-9594-0a25d052b8df).  
 
 
+# Problems of SST of 0 values on the met_em files
+"If you are planning to run simulations that go out for more than about a week, it's advised to use an outside source for SST data. Most datasets (for e.g., GFS) typically come with an SST field, but they are usually coarse and not reliable for an extended time. If you are not doing long simulations, then it's okay to skip the outside SST source. In that case, you don't even need to specify anything extra in the namelist.input file - so you don't need to add sst_update, and it's corresponding settings." 
 
+If you need more information of how to do this, refeer to the file `Running WRF with ERA5.pptx`
+
+![image](https://github.com/user-attachments/assets/c10a61a1-b3ee-462f-8a8d-1e4ad836392a)
+
+Source [Link](https://forum.mmm.ucar.edu/threads/re-enquiry-about-sst-update-in-wrf.8113/)
 
 # If you delete your Vtable
 
