@@ -314,7 +314,7 @@ cd ..
 
  # Building WRF and WPS
 Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use version [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz) with [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz).  The configureation choices will be chosen with LSU's systems in mind.  
-### Building WRF
+### Configuring WRF
 * From the "/work/[your_username]/build-wrf/" directory type:
 ```
 wget https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz
@@ -365,6 +365,7 @@ Once you've either skipped the leap year removal or completed it, proceed here.
 You can also check that the essential .exe files were properly created by typing:
 ```
 ls -ls main/*.exe
+cd ..
 ```
 ![image](https://github.com/user-attachments/assets/5c651dc0-ea90-49d8-8c58-2f31f6dd97b7)  
 The numbers circled are the file size in bytes.  If they are 0 bytes, something has gone wrong in the compilation process and you need to check the log.compile for an error.  
@@ -376,26 +377,30 @@ Congrats! You've successfully compiled WRF-4.2.2 and now we only need to worry a
 
 &nbsp;
 
-### Building WPS
-This step will build the WRF-Preprocessing System.  It will be very similar to the Building WRF section.
-* From the "build-wrf/libraries" directory, type:
-  * wget https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz  
-  * tar xzvf v4.2.tar.gz
-  * rm v4.2.tar.gz
-* This will create the "WPS-4.2" directory.
-  * ![image](https://github.com/user-attachments/assets/e18e3f4c-68a4-4111-8c94-88be92547b0c)
+### Configuring WPS
+This step will build the WRF-Preprocessing System.  It will be very similar to the Building WRF section.  
+First, download and extract the WPS directory.  
+* From the "/work/[your_username]/build-wrf" directory type:
+```
+wget https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz  
+tar xzvf v4.2.tar.gz
+rm v4.2.tar.gz
+cd WPS-4.2
+```
+![image](https://github.com/user-attachments/assets/e18e3f4c-68a4-4111-8c94-88be92547b0c)
 
 &nbsp;
 
-
-*  Navigate into the WPS-4.2 directory with "cd WPS-4.2" and type:
-  *  export WRF_DIR=[path to build-wrf]/build-wrf/WRF-4.2.2
-  *  ./configure
+* From the "/work/[your_username]/build-wrf/WPS-4.2" directory type:
+```
+export WRF_DIR=/work/[your_username]/build-wrf/WRF-4.2.2
+./configure
+```
 *  There will be 40 options for compilers to use for WPS.  We want to compile WPS with the same compiler chosen in the Building WRF step.  For myself—because we used gfortran, want the ability to use clusters on LSU systems, and nest simulations—we are choosing the "Linux x86_64, gfortran (dmpar)" option.
-*  ![image](https://github.com/user-attachments/assets/9eac0e28-2819-4265-9b9b-3637e58b857f)
+![image](https://github.com/user-attachments/assets/9eac0e28-2819-4265-9b9b-3637e58b857f)
 
 ### Removing Leap Years from WPS
-Similar to WRF, if you're running a similation with a Feb. 29th but your forcing data doesn't account for leap days, WPS will fail to run.  This step tells you how you can prevent WPS from incorporating Feb. 29th.  This step is not necessary and can be skipped if desired.
+Similar to WRF, if you're running a similation with a Feb. 29th but your forcing data doesn't account for leap days, WPS will fail to run.  This step tells you how you can prevent WPS from incorporating Feb. 29th.  This step is not necessary and you can skip to the "Compiling WPS" section below.
 * After configuring WPS, a "configure.wps" file will be created.
   * Open the "configure.wps"
   * Navigate to the subheading "Architecture Specific Settings" and find the line "CPPFLAGS"
@@ -412,22 +417,26 @@ Similar to WRF, if you're running a similation with a Feb. 29th but your forcing
 
  &nbsp;
 
-
+### Compiling WPS
  If you completed or skipped the "Removing Leap Years from WPS" section, pick back up here with the compilation!
- * from the "build-wrf/WPS-4.2" type:
-   * ./compile >& log.compile
-   * ![image](https://github.com/user-attachments/assets/bd74ef03-0ea1-45b2-bc4c-016da6b32421)
+* From the "/work/[your_username]/build-wrf/WPS-4.2" directory type:
+```
+./compile >& log.compile
+```
+![image](https://github.com/user-attachments/assets/bd74ef03-0ea1-45b2-bc4c-016da6b32421)
  * This will only take a couple minutes to finish.  Once done, 3 executables should appear in the WPS-4.2 directory
    * geogrid.exe
    * ungrib.exe
    * metgrid.exe   
  * The .exe files listed above are symbolic links.  A symbolic link is kind of like a desktop shortcut.  The file itself is not housed in the top-level of the WPS directory, but we've created a shortcut and can manipulate each of those files for ease.
- * To ensure the WPS process ran correctly, make sure each of these is not zero sized by typing the following from the "build-wrf/WPS-4.2" directory:
-   * ls -ls geogrid/src/geogrid.exe
-   * ls -ls metgrid/src/metgrid.exe
-   * ls -ls ungrib/src/ungrib.exe
-
- * ![image](https://github.com/user-attachments/assets/b4243502-5cf8-4b0c-9de7-12ef2099c3bc)
+ * To ensure the WPS process ran correctly, make sure each of these is not zero sized by typing the following from the "/work/[your_username]/build-wrf/WPS-4.2" directory:
+```
+ls -ls geogrid/src/geogrid.exe
+ls -ls metgrid/src/metgrid.exe
+ls -ls ungrib/src/ungrib.exe
+cd ..
+```
+![image](https://github.com/user-attachments/assets/b4243502-5cf8-4b0c-9de7-12ef2099c3bc)  
 
    &nbsp;
 
@@ -436,23 +445,25 @@ Similar to WRF, if you're running a similation with a Feb. 29th but your forcing
    &nbsp;
 
    # Static Geography Data
-The last thing that needs to be done is set up the "static geography data."  These are variables such as soiltype or albedo or land useage that does not change often and so is considered "static" data that is necessary for WRF to run.  
+The hard parts are done, now you just need the "static geography data."  These are variables such as soiltype or albedo or land useage that does not change often and so is considered "static" data necessary for WRF to run.  
 The link to the download page is [HERE](https://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). 
 
 &nbsp;
 
-Important Note: In my experience, geogrid.exe often requires a few more geog files than are actually prvided in the below tar.  If you encounter an error running geogrid.exe related to a non-existing file in the geog directory, go to the above webpage and manually download and add it to the geog directory.  There is also a step-by-step guide on how to do this on the "WRF Trouble Shooting and Tips" page of this github.  
+Important Note: In my experience, geogrid.exe often requires a few more geog files than are actually provided in the tar.  If you encounter an error running geogrid.exe related to a non-existing file in the geog directory, go to the above webpage and manually download and add it to the geog directory.  There is also a step-by-step guide on how to do this on the "Troubleshooting and Tips.md" page of this github.  
 
 &nbsp;
 
-* Navigate to the "build-wrf" directory ("cd .." if you just compiled WPS) and type:
-  * wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
-  * tar -xf geog_high_res_mandatory.tar.gz
-    * Important Note: this will be about 30GB of data
+Navigate to your "/work/[your_username]/build-wrf/" directory and type:
+```
+wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
+tar -xf geog_high_res_mandatory.tar.gz
+```
+* Important Note: this will be about 30GB of data
 * When you use the WPS process, in the namelist.wps be sure to set the "geog_data_path" to this directory with:
-  *  geog_data_path = [path_to_build-wrf]/build-wrf/WPS_GEOG
-  *  ("WPS_GEOG" is a newer naming convention, which is why mine is called "geog" in the picture below)
-  *  ![image](https://github.com/user-attachments/assets/24feb2d9-2384-468d-8aa1-2f8a5650ed36)
+  *  geog_data_path = /work/[your_username]/build-wrf/[geog_directory_name]
+  *  ("WPS_GEOG" is a newer and common geog directory naming convention, mine is called "geog" in the picture below)
+  ![image](https://github.com/user-attachments/assets/24feb2d9-2384-468d-8aa1-2f8a5650ed36)
  
 
 &nbsp;
@@ -461,26 +472,33 @@ Important Note: In my experience, geogrid.exe often requires a few more geog fil
 This section takes most of those environmental variables set at the start of the tutorial and adds them to your .bashrc file.  This is important because otherwise when you close the terminal you'll lose the environmental variables you set, some of which are essential to run WRF.  
 
 *Open the .bashrc file with either of the below commands:
-  *  vi ~/.bashrc
-  *  nano ~/.bashrc
-*  Make sure the below environmental variables  are added to the file
-  * export WRF_DIR=/work/cjoh513/build-wrf/WRF-4.2.2
-  * export WRF_CHEM=1
-  * export WRF_KPP=0
-  * export WRFIO_NCD_LARGE_FILE_SUPPORT=1
-  * export DIR=/work/cjoh513/build-wrf/libraries
-  * export PATH=$DIR/netcdf/bin:$DIR/mpich/bin:$PATH
-  * export NETCDF=$DIR/netcdf
-  * export JASPERLIB=$DIR/grib2/lib
-  * export JASPERINC=$DIR/grib2/include
-  * export CC=gcc
-  * export CXX=g++
-  * export FC=gfortran
-  * export FCFLAGS=-m64
-  * export F77=gfortran
-  * export FFLAGS=-m64
+```
+vi ~/.bashrc
+```
+or
+```
+nano ~/.bashrc
+```
+*  Make sure the below environmental variables  are added to your .bashrc
+```
+export WRF_DIR=/work/cjoh513/build-wrf/WRF-4.2.2
+export WRF_CHEM=1
+export WRF_KPP=0
+export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+export DIR=/work/cjoh513/build-wrf/libraries
+export PATH=$DIR/netcdf/bin:$DIR/mpich/bin:$PATH
+export NETCDF=$DIR/netcdf
+export JASPERLIB=$DIR/grib2/lib
+export JASPERINC=$DIR/grib2/include
+export CC=gcc
+export CXX=g++
+export FC=gfortran
+export FCFLAGS=-m64
+export F77=gfortran
+export FFLAGS=-m64
+```
 * Here is an example of what mine looks like, but there are a few more variables added than strictly for this tutorial.  
-* ![image](https://github.com/user-attachments/assets/472643fb-5907-4670-934e-331637da16e7)  
+![image](https://github.com/user-attachments/assets/472643fb-5907-4670-934e-331637da16e7)  
 
 
 
