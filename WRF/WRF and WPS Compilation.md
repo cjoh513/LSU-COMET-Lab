@@ -3,7 +3,7 @@ This is a written account of my attempt to compile WRF4.2 as of 1/22/2025.
 This follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php), but also includes photos and any tips or troubles I run into.  
 &nbsp;
 
-Important Note: I am compiling this on a system that has all of the necessary libraries such as GNU gcc and foretran already installed.  
+Important Note: I am compiling this on a system that has all of the necessary libraries such as GNU gcc and Fortran already installed.  
 &nbsp;
 
 Important Note: If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name.  
