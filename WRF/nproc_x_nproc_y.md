@@ -5,7 +5,35 @@ Running a WRF simulation is straightforward, but doing it **efficiently**—espe
 ---
 ## Note
 
-When you run real (`./real.exe`), you must comment the lines of `nproc_x` and `nproc_y` like this `!nproc_x` and `!nproc_y` in the namelist.input, in other way it will produce an error.
+When you run real (`./real.exe`), you must have the same number of processors sending the real, than in the wrf.
+
+For example:
+For Real
+```sh
+#!/bin/bash
+#SBATCH -N 1    
+#SBATCH -n 20   
+
+...
+
+# Execute WRF with the requested resources
+srun -N1 -n15 ./real.exe > real.log 2>&1
+
+```
+
+For WRF
+```sh
+#!/bin/bash
+#SBATCH -N 1                           
+#SBATCH -n 20                          
+
+...
+
+# Execute WRF with the requested resources
+srun -N1 -n15 ./wrf.exe > wrf.log 2>&1
+```
+
+comment the lines of `nproc_x` and `nproc_y` like this `!nproc_x` and `!nproc_y` in the namelist.input, in other way it will produce an error.
 
 ---
 
