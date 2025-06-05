@@ -3,6 +3,13 @@
 2. [Setting Up the "build-wrf" Directory](#setting-up-the-build-wrf-directory)
 3. [System Environment Tests](#system-environment-tests)
    - [Conducting System Environment Tests](#conducting-system-environment-tests)
+     - [Test 1](#test-1)
+     - [Test 2](#test-2)
+     - [Test 3](#test-3)
+     - [Test 4](#test-4)
+     - [Test 5](#test-5)
+     - [Test 6](#test-6)
+     - [Test 7](#test-7)  
 4. [Building Libraries](#building-libraries)
    - [Export Variables](#export-variables)
    - [Install NetCDF-c](#install-netcdf-c)
@@ -91,26 +98,26 @@ I have a typo in the image above, I make the "/tests" directory in my "build-wrf
 ## Conducting System Environment Tests
 * There are seven tests that will be run.  Each is a subheading below.
 * From your "/work/[your_username]/build-wrf/tests" directory Type:
-### Test #1
+### Test 1
 ```
 gfortran TEST_1_fortran_only_fixed.f
 ./a.out
 ```
 * The following should be outputted: "SUCCESS test 1 fortran only fixed format".
-### Test #2
+### Test 2
 ```
 gfortran TEST_2_fortran_only_free.f90
 ./a.out
 ```
 * The following should be outputted: "Assume Fortran 2003: has FLUSH, ALLOCATABLE, derived type, and ISO C Binding
 SUCCESS test 2 fortran only free format".  
-### Test #3
+### Test 3
 ```
 gcc TEST_3_c_only.c
 ./a.out
 ```
 * The Following should be outputted: "SUCCESS test 3 C only".
-### Test #4
+### Test 4
 ```
 gcc -c -m64 TEST_4_fortran+c_c.c
 gfortran -c -m64 TEST_4_fortran+c_f.f90
@@ -120,19 +127,19 @@ gfortran -m64 TEST_4_fortran+c_f.o TEST_4_fortran+c_c.o
 * The following should be outputted: "C function called by Fortran
 Values are xx = 2.00 and ii = 1
 SUCCESS test 4 fortran calling c".
-### Test #5
+### Test 5
 In addition to the mentioned compilers the WRF build system relies on scripts as the user interface which rely on csh, perl, and sh.  
 These tests ensure csh, perl, and sh are working properly.  
 ```
 ./TEST_csh.csh
 ```
 * The following should be outputted: "SUCCESS csh test".
-### Test #6
+### Test 6
 ```
 ./TEST_perl.pl
 ```
 * The following should be outputted: "SUCCESS perl test".
-### Test #7
+### Test 7
 ```
 ./TEST_sh.sh
 cd ..
