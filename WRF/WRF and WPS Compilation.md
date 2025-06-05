@@ -301,6 +301,7 @@ mpif90 02_fortran+c+netcdf+mpi_f.o \
 02_fortran+c+netcdf+mpi_c.o \
      -L${NETCDF}/lib -lnetcdff -lnetcdf
 mpirun ./a.out
+cd ..
 ```
 * The following should be outputted:
   * C function called by Fortran
@@ -312,28 +313,32 @@ mpirun ./a.out
  &nbsp;  
 
  # Building WRF and WPS
-Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz) with [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz).  The compilation choices will be chosen with LSU's systems in mind.  
+Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use version [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz) with [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz).  The configureation choices will be chosen with LSU's systems in mind.  
 ### Building WRF
-* From the "build-wrf" directory, download WRF and untar with the below commands:
-  * wget https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz
-  * tar xzvf v4.2.2.tar.gz
-  * rm v4.2.2.tar.gz
-    This should create a directory called "WRF-4.2.2"  
-    ![image](https://github.com/user-attachments/assets/11a29fcb-dde3-4c37-905a-378849997422)  
+* From the "/work/[your_username]/build-wrf/" directory type:
+```
+wget https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz
+tar xzvf v4.2.2.tar.gz
+rm v4.2.2.tar.gz
+```
+This should create a directory called "WRF-4.2.2"  
+![image](https://github.com/user-attachments/assets/11a29fcb-dde3-4c37-905a-378849997422)  
  
-    
-* Navigate into the "build-wrf/WRF-4.2.2" and create the configure file with:
-  * cd WRF-4.2.2
-  * ./configure
-    * You'll see a large number of options for you to select how to configure WRF based on your system.
-    * They correspond to which compiler you are using and whether you want WRF to run serially, Shared-Memory Parallelism, or with Distributed-Memory Parallelism.  More information on these can be found [here](https://forum.mmm.ucar.edu/threads/compiling-options-serial-vs-smpar-vs-dmpar.65/).  
+Now we'll configure before compiling.  
+* From the "/work/[your_username]/build-wrf/" directory type:
+```
+cd WRF-4.2.2
+./configure
+```
+* You'll see a large number of options for you to select how to configure WRF based on your system.
+* They correspond to which compiler you are using and whether you want WRF to run serially, Shared-Memory Parallelism, or with Distributed-Memory Parallelism.  More information on these can be found [here](https://forum.mmm.ucar.edu/threads/compiling-options-serial-vs-smpar-vs-dmpar.65/).  
     * Because LSU's systems use a series of clusters and we compiled with gfortran select option 34 by typing "34"
     * type "1" for the "Compile for nesting?" option.  This allows nested simulations.
     * ![image](https://github.com/user-attachments/assets/6ac672f6-c70b-44ab-9d73-add55803f8ed)  
 
 ### Removing Leap Years from WRF
-If you wish to compile your WRF without Leap Days (i.e., skips Feb. 29th every 4 years), follow these steps.  If you want leap-days then you can skip to the "./compile em_real >& log.compile" step
-* From the "build-wrf/WRF-4.2.2" directory open the "configure.wrf" file.
+If you wish to compile your WRF without Leap Days (i.e., skips Feb. 29th every 4 years), follow these steps.  If you want leap-days then you can skip to the "Compiling WRF" step
+* From the "/work/[your_username]/build-wrf/WRF-4.2.2" directory open the "configure.wrf" file.
 * Navigate down to the "Architecture Specific Settings" section.
 * To the line "ARCH_LOCAL" add at the end, "-DNO_LEAP_CALENDAR"
 * Save and close "configure.wrf"
@@ -348,18 +353,22 @@ Once you've either skipped the leap year removal or completed it, proceed here.
 
 &nbsp;
 
-
-* Type:
-  * ./compile em_real >& log.compile
+### Compiling WRF
+* From the "/work/[your_username]/build-wrf/WRF-4.2.2" directory type:
+```
+./compile em_real >& log.compile
+```
 * The process will probably take some time (maybe 20-30 minutes).
 * This tutorial uses the "em_real" "case_name", which is the most common option and what I use as it's designed for real data situations.  Other options can be found in the official WRF tutorial [here](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php).
-* The end of the log.compile should look like the picture below if it ran correctly.
-* ![image](https://github.com/user-attachments/assets/3eb0f3c2-573d-4a00-8d1c-f628e1f92fa6)
-* You can also check that the essential .exe files were properly created with :
-  * ls -ls main/*.exe
-  * ![image](https://github.com/user-attachments/assets/5c651dc0-ea90-49d8-8c58-2f31f6dd97b7)
-  * The numbers circled are the file size in bytes.  They should be around this size (~65MB), but if they are 0 bytes, something has gone wrong in the compilation process and you need to check the log.compile for an error.
- Congrats! You've successfully compiled WRF-4.2.2 and now we only need to worry about WPS.
+* The end of the log.compile should look like the picture below if it ran correctly.  
+![image](https://github.com/user-attachments/assets/3eb0f3c2-573d-4a00-8d1c-f628e1f92fa6)  
+You can also check that the essential .exe files were properly created by typing:
+```
+ls -ls main/*.exe
+```
+![image](https://github.com/user-attachments/assets/5c651dc0-ea90-49d8-8c58-2f31f6dd97b7)  
+The numbers circled are the file size in bytes.  If they are 0 bytes, something has gone wrong in the compilation process and you need to check the log.compile for an error.  
+Congrats! You've successfully compiled WRF-4.2.2 and now we only need to worry about WPS.  
 
 
 
