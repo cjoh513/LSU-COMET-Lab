@@ -3,13 +3,13 @@ This is a tuotrial for how to build and compile WPS and WRF on LSU's HPC systems
 It follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php), but also includes photos and any tips or troubles I run into.  
 &nbsp;
 
-Important Note: I am compiling this on a system that has all of the necessary libraries such as GNU gcc and Fortran already installed.  
+I am compiling this on a system that has all of the necessary libraries such as GNU gcc and Fortran already installed.  
 &nbsp;
 
-Important Note: If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name. 
+If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name. 
 &nbsp;
 
-Important Note: I highly recommend trying to go through the entire compilation process for both WRF and WPS in one go.  I don't recommend getting halfway through then stopping and coming back to it later.  It is very easy to lose track of which environmental variables you've exported. If you turn your computer off or restart the terminal, those variables will be reset and no longer exist (further explaination later).  Again, it can be annoying, but the best way to complete this tutorial is to do it all in one session.  
+I highly recommend trying to go through the entire compilation process for both WRF and WPS in one go.  I don't recommend getting halfway through then stopping and coming back to it later.  It is very easy to lose track of which environmental variables you've exported. If you turn your computer off or restart the terminal, those variables will be reset and no longer exist (further explaination later).  Again, it can be annoying, but the best way to complete this tutorial is to do it all in one session.  
 &nbsp;
 
 # Setting up the "build-wrf" Directory
