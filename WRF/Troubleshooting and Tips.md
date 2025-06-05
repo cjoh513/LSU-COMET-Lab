@@ -102,7 +102,7 @@ More detailed information, and what to do if you have multiple domains, can be f
 For example.  
 ![image](https://github.com/user-attachments/assets/57a513a8-1943-4b5f-9380-8c29bb6786c5)  
 This error was thrown for a rectangular domain that needed at least 100 processors to run in a reasonable time frame.  
-* The solution is to add "nproc_x" and "nproc_y" to the "&domains" section of your namelist.input (AFTER YOU'VE RUN real.exe).  
+* The solution is to add "nproc_x" and "nproc_y" to the "&domains" section of your namelist.input (I recommend doing so after you've run real.exe as otherwise it will try to distribute the processors while running real.exe and there's probably far more processors during the simulation than the preprocessing stage so it will error).  
 * "nproc_x" and "nproc_y" determine the decomposition ratio for your domain, which is to say it alots your domain gridcells per processor.   
 * An important rule is that "Total Processors = nproc_x * nproc_y".  
 * In the above example, WRF by default split the total processors (100) evenly among where nproc_x=10 and nproc_y=10.  
