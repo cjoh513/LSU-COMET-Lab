@@ -1,3 +1,37 @@
+# Table of Contents
+1. [Introduction](#introduction)
+2. [Setting Up the "build-wrf" Directory](#setting-up-the-build-wrf-directory)
+3. [System Environment Tests](#system-environment-tests)
+   - [Conducting System Environment Tests](#conducting-system-environment-tests)
+4. [Building Libraries](#building-libraries)
+   - [Export Variables](#export-variables)
+   - [Install NetCDF-c](#install-netcdf-c)
+   - [Exporting More Environmental Variables Post NetCDF-c](#exporting-more-environmental-variables-post-netcdf-c)
+   - [Install NetCDF-Fortran](#install-netcdf-fortran)
+   - [Install mpich](#install-mpich)
+   - [Install zlib](#install-zlib)
+   - [Install libpng](#install-libpng)
+   - [Install jasper](#install-jasper)
+   - [Install hdf5](#install-hdf5)
+5. [Library Compatibility Test](#library-compatibility-test)
+   - [Library Test 1](#library-test-1)
+   - [Library Test 2](#library-test-2)
+6. [Building WRF](#building-wrf)
+   - [Configuring WRF](#configuring-wrf)
+   - [Removing Leap Years from WRF](#removing-leap-years-from-wrf)
+   - [Compiling WRF](#compiling-wrf)
+7. [Building WPS](#building-wps)
+   - [Configuring WPS](#configuring-wps)
+   - [Removing Leap Years from WPS](#removing-leap-years-from-wps)
+   - [Compiling WPS](#compiling-wps)
+8. [Static Geography Data](#static-geography-data)
+9. [Adding Environmental Variables to .bashrc](#adding-environmental-variables-to-bashrc)
+&nbsp;
+
+
+&nbsp;
+
+
 # Introduction
 This is a tuotrial for how to build and compile WPS and WRF on LSU's HPC systems.
 It follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php), but also includes photos and any tips or troubles I run into.  
@@ -12,7 +46,7 @@ If something breaks or doesn't compile correctly, often times the best solution 
 I highly recommend trying to go through the entire compilation process for both WRF and WPS in one go.  I don't recommend getting halfway through then stopping and coming back to it later.  It is very easy to lose track of which environmental variables you've exported. If you turn your computer off or restart the terminal, those variables will be reset and no longer exist (further explaination later).  Again, it can be annoying, but the best way to complete this tutorial is to do it all in one session.  It will probably take about 1-2 hours to complete depending on your linux aptitude.
 &nbsp;
 
-# Setting up the "build-wrf" Directory
+# Setting Up the "build-wrf" Directory
 The first step is to prepare your tars and get your files in order.  We will make your build-wrf directory and download the necessary [WRF](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz)/[WPS](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz) tars
 To get the WRF compilation tars for other versions of WRF, you can visit [THIS](https://github.com/wrf-model/WRF/releases) github.  
 * Type:
@@ -176,7 +210,7 @@ export CPPFLAGS=-I$DIR/netcdf/include
 
 &nbsp;
 
-## Installing NetCDF-Fortran
+## Install NetCDF-Fortran
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://github.com/Unidata/netcdf-fortran/archive/v4.5.2.tar.gz
@@ -193,7 +227,7 @@ rm v4.5.2.tar.gz
 
 &nbsp;
 
-## Installing mpich
+## Install mpich
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/mpich-3.0.4.tar.gz  
@@ -209,7 +243,7 @@ export PATH=$DIR/mpich/bin:$PATH
 
 &nbsp;
 
-## Installing zlib
+## Install zlib
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
@@ -228,7 +262,7 @@ export CPPFLAGS="-I$DIR/grib2/include -I$DIR/netcdf/lib"
 &nbsp;
 
 
-## Installing libpng
+## Install libpng
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/libpng-1.2.50.tar.gz
@@ -244,7 +278,7 @@ rm libpng-1.2.50.tar.gz
 &nbsp;
 
 
-## Installing jasper  
+## Install jasper  
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
@@ -259,7 +293,7 @@ rm jasper-1.900.1.tar.gz
 
 &nbsp;
 
-## Installing hdf5
+## Install hdf5
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
@@ -283,7 +317,7 @@ You've ensured the compilers are compatible, but now we need to ensure that the 
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar
 ```
 
-## Library Test #1
+## Library Test 1
 * Type:
 ```
 cp ${NETCDF}/include/netcdf.inc .
@@ -296,7 +330,7 @@ gfortran 01_fortran+c+netcdf_f.o 01_fortran+c+netcdf_c.o \-L${NETCDF}/lib -lnetc
   * "C function called by Fortran
   * Values are xx = 2.00 and ii = 1
   * SUCCESS test 1 fortran + c + netcdf"
-## Library Test #2
+## Library Test 2
 * Type:
 ```
 mpif90 -c 02_fortran+c+netcdf+mpi_f.f
