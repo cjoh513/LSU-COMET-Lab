@@ -6,8 +6,7 @@ This follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wr
 Important Note: I am compiling this on a system that has all of the necessary libraries such as GNU gcc and foretran already installed.  
 &nbsp;
 
-Important Note: The items I tell you to type are in quotes. Don't type the quotes.  They are simply there to help delineate instructions.
-For example, if I tell you to type "which gfortran", you type what's between the quotes but not the quotes themselves.  
+Important Note: If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name.  
 
 # Tars
 The first step is to prepare your tars and get your files in order.  We will make your build-wrf directory and download the necessary [WRF](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz)/[WPS](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz) tars
@@ -115,6 +114,7 @@ These will also be specific versions of the libraries which may be outdated in t
 * Within your "/work/[your_username]/build-wrf" directory type:
 ```
 mkdir libraries
+cd libraries
 DIR=[path-to-your-libraries]/libraries
 export CC=gcc  
 export CXX=g++  
@@ -131,152 +131,177 @@ I have a typo in the above image.  Instead of setting "F77=gfortran" I accidenta
 &nbsp;
 
 ### Install NetCDF-c
-Within the "build-wrf/libraries" directory, type the below set of commands:
-* wget https://github.com/Unidata/netcdf-c/archive/v4.7.2.tar.gz
-* tar xzvf v4.7.2.tar.gz
-* cd netcdf-c-4.7.2
-* ./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared  
-Important Note: the "./configure" command should end in a configuration summary looking something like this image  
+Within the "/work/[your_username]/build-wrf/libraries" directory, type:
+```
+wget https://github.com/Unidata/netcdf-c/archive/v4.7.2.tar.gz
+tar xzvf v4.7.2.tar.gz
+cd netcdf-c-4.7.2
+./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared
+```
+The "./configure" command should end in a configuration summary looking something like this image  
 ![image](https://github.com/user-attachments/assets/f6e7a088-7842-45c2-a68f-a2acd661d666)
-* type the following commands
-* make
-* make install  
-Important Note: After the "make install" command, if everything ran properly you should get a congratulations message like the image below.  
+* Type:
+```
+make
+make install
+cd ..
+rm v4.7.2.tar.gz
+```  
+After the "make install" command, if everything ran properly you should get a congratulations message like the image below.  
 ![image](https://github.com/user-attachments/assets/b611ab89-0de4-4536-ac08-2875ca45efa2)  
-Within the "build-wrf/libraries" directory, there should now be the "netcdf", "netcdf-c-4.7.2", and "v4.7.2.tar.gz" files.  
+Within the "build-wrf/libraries" directory, there should now be the "netcdf" and "netcdf-c-4.7.2" files.  
 ![image](https://github.com/user-attachments/assets/b2fa377f-37b2-4b0e-9770-e4719fad8545)  
-Clean up by removing the .tar file with the command "rm v4.7.2.tar.gz".  You may want to wait until the end to remove this in case you run into hiccups and need a fresh copy from the .tar file.  
-![image](https://github.com/user-attachments/assets/7f82446f-db78-410c-aba6-07641d59c4c4)  
+
 
 
 
 
 &nbsp;
 
-### Setting More Environmental Variables
-Set a few more environmental variables by putting the following commands:  
-* export PATH=$DIR/netcdf/bin:$PATH  
-* export NETCDF=$DIR/netcdf  
-* export LIBS="-lnetcdf"  
-* export LDFLAGS=-L$DIR/netcdf/lib  
-* export CPPFLAGS=-I$DIR/netcdf/include  
+### Setting More Environmental Variables Post NetCDF-C
+These are variables to set AFTER successfully installing NETCDF-C.  Setting these before you install NETCDF-C will cause the library install to break.  So if you need to restart the entire compilation process or reinstall NETCDF-C, be sure to remove the below variables or restart your smic/linux terminal so  these variables will no longer be set.
+* Type:
+```
+export PATH=$DIR/netcdf/bin:$PATH  
+export NETCDF=$DIR/netcdf  
+export LIBS="-lnetcdf"  
+export LDFLAGS=-L$DIR/netcdf/lib  
+export CPPFLAGS=-I$DIR/netcdf/include
+```
 ![image](https://github.com/user-attachments/assets/9fd28784-115a-483a-9f46-9f2e412053e1)
 
 &nbsp;
 
 ### Installing netcdf-fortran
-type the following commands:
-* wget https://github.com/Unidata/netcdf-fortran/archive/v4.5.2.tar.gz
-* tar xzvf v4.5.2.tar.gz
-* cd netcdf-fortran-4.5.2
-* ./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared
-* make
-* make install  
-* cd ..  
-* rm v4.5.2.tar.gz
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://github.com/Unidata/netcdf-fortran/archive/v4.5.2.tar.gz
+tar xzvf v4.5.2.tar.gz
+cd netcdf-fortran-4.5.2
+./configure --prefix=$DIR/netcdf --disable-dap --disable-netcdf-4 --disable-shared
+make
+make install  
+cd ..  
+rm v4.5.2.tar.gz
+```
 ![image](https://github.com/user-attachments/assets/5a53abf6-f111-46cd-a101-0075d8d1fbab)  
 
 
 &nbsp;
 
 ### Installing mpich
-type the following commands:
-* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/mpich-3.0.4.tar.gz  
-* tar xzvf mpich-3.0.4.tar.gz
-* cd mpich-3.0.4
-* ./configure --prefix=$DIR/mpich
-* make
-* make install
-* cd ..
-* rm mpich-3.0.4.tar.gz  
-* export PATH=$DIR/mpich/bin:$PATH
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/mpich-3.0.4.tar.gz  
+tar xzvf mpich-3.0.4.tar.gz
+cd mpich-3.0.4
+./configure --prefix=$DIR/mpich
+make
+make install
+cd ..
+rm mpich-3.0.4.tar.gz  
+export PATH=$DIR/mpich/bin:$PATH
+```
 
 &nbsp;
 
 ### Installing zlib
-From the "build-wrf/libraries" directory, type the following commands:
-* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
-* tar xzvf zlib-1.2.11.tar.gz
-* cd zlib-1.2.11
-* ./configure --prefix=$DIR/grib2
-* make
-* make install
-* cd ..
-* rm zlib-1.2.11.tar.gz
-* export LDFLAGS="-L$DIR/grib2/lib -L$DIR/netcdf/lib"
-* export CPPFLAGS="-I$DIR/grib2/include -I$DIR/netcdf/lib"
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
+tar xzvf zlib-1.2.11.tar.gz
+cd zlib-1.2.11
+./configure --prefix=$DIR/grib2
+make
+make install
+cd ..
+rm zlib-1.2.11.tar.gz
+export LDFLAGS="-L$DIR/grib2/lib -L$DIR/netcdf/lib"
+export CPPFLAGS="-I$DIR/grib2/include -I$DIR/netcdf/lib"
+```
 * ![image](https://github.com/user-attachments/assets/ada181cd-b96e-498e-9ad0-c2b472d0979e)  
 
 &nbsp;
 
 
 ### Installing libpng
-From the "build-wrf/libraries" directory, type the following commands:
-* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/libpng-1.2.50.tar.gz
-* tar xzvf libpng-1.2.50.tar.gz
-* cd libpng-1.2.50
-* ./configure --prefix=$DIR/grib2
-* make
-* make install
-* cd ..
-* rm libpng-1.2.50.tar.gz
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/libpng-1.2.50.tar.gz
+tar xzvf libpng-1.2.50.tar.gz
+cd libpng-1.2.50
+./configure --prefix=$DIR/grib2
+make
+make install
+cd ..
+rm libpng-1.2.50.tar.gz
+```
 
 &nbsp;
 
 
 ### Installing jasper  
-From the "build-wrf/libraries" directory, type the following commands:
-* wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
-* tar xzvf jasper-1.900.1.tar.gz
-* cd jasper-1.900.1
-* ./configure --prefix=$DIR/grib2
-* make
-* make install
-* cd ..
-* rm jasper-1.900.1.tar.gz
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
+tar xzvf jasper-1.900.1.tar.gz
+cd jasper-1.900.1
+./configure --prefix=$DIR/grib2
+make
+make install
+cd ..
+rm jasper-1.900.1.tar.gz
+```
 
 &nbsp;
 
 ### Installing hdf5
-From the "build-wrf/libraries" directory, type the following commands:
-* wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
-* tar xzvf hdf5-1.10.5.tar.gz
-* cd hdf5-hdf5-1_10_5
-* ./configure --prefix=$DIR/netcdf --with-zlib=$DIR/grib2 --enable-fortran --enable-shared
-* make
-* make install
-* cd ..
-* rm hdf5-1.10.5.tar.gz
-
+* From the "/work/[your_username]/build-wrf/libraries" directory type:
+```
+wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
+tar xzvf hdf5-1.10.5.tar.gz
+cd hdf5-hdf5-1_10_5
+./configure --prefix=$DIR/netcdf --with-zlib=$DIR/grib2 --enable-fortran --enable-shared
+make
+make install
+cd ..
+rm hdf5-1.10.5.tar.gz
+cd ../tests
+```
 
 &nbsp;
 
 
 # Library Compatibility Test
-We've ensured the compilers are compatible, but now we need to ensure that the libraries of Fortran, C, and NetCDF are compatible.  
-Again, if you're compiling these on LSU's systems there should be no incompatiblities.  
-* In the same "build_wrf/tests" directory the compiler tests were run in, download [THIS](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar) tar file which contains the libraries test files.
-* Unpack the tar file with "tar -xf Fortran_C_NETCDF_MPI_tests.tar"
+You've ensured the compilers are compatible, but now we need to ensure that the libraries of Fortran, C, and NetCDF are compatible.    
+* From the "/work/[your_username]/build-wrf/tests" directory type:
+```
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar
+```
+
 ### Test #1
-* Type the following commands:
-* cp ${NETCDF}/include/netcdf.inc .
-* gfortran -c 01_fortran+c+netcdf_f.f
-* gcc -c 01_fortran+c+netcdf_c.c
-* gfortran 01_fortran+c+netcdf_f.o 01_fortran+c+netcdf_c.o \-L${NETCDF}/lib -lnetcdff -lnetcdf
-* ./a.out
+* Type:
+```
+cp ${NETCDF}/include/netcdf.inc .
+gfortran -c 01_fortran+c+netcdf_f.f
+gcc -c 01_fortran+c+netcdf_c.c
+gfortran 01_fortran+c+netcdf_f.o 01_fortran+c+netcdf_c.o \-L${NETCDF}/lib -lnetcdff -lnetcdf
+./a.out
+```
 * The following should be outputted:
   * "C function called by Fortran
   * Values are xx = 2.00 and ii = 1
   * SUCCESS test 1 fortran + c + netcdf"
 ### Test #2
-* Type the following commands
-  * cp ${NETCDF}/include/netcdf.inc .
-  * mpif90 -c 02_fortran+c+netcdf+mpi_f.f
-  * mpicc -c 02_fortran+c+netcdf+mpi_c.c
-  * mpif90 02_fortran+c+netcdf+mpi_f.o \
+* Type:
+```
+mpif90 -c 02_fortran+c+netcdf+mpi_f.f
+mpicc -c 02_fortran+c+netcdf+mpi_c.c
+mpif90 02_fortran+c+netcdf+mpi_f.o \
 02_fortran+c+netcdf+mpi_c.o \
-     -L${NETCDF}/lib -lnetcdff -lnetcdf  
-  * mpirun ./a.out  
+     -L${NETCDF}/lib -lnetcdff -lnetcdf
+mpirun ./a.out
+```
 * The following should be outputted:
   * C function called by Fortran
   * Values are xx = 2.00 and ii = 1
