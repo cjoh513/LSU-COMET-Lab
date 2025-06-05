@@ -1,14 +1,18 @@
 # Introduction
-This is a written account of my attempt to compile WRF4.2 as of 1/22/2025.  
-This follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php), but also includes photos and any tips or troubles I run into.  
+This is a tuotrial for how to build and compile WPS and WRF on LSU's HPC systems.
+It follows the official WRF tutorial found [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compilation_tutorial.php), but also includes photos and any tips or troubles I run into.  
 &nbsp;
 
 Important Note: I am compiling this on a system that has all of the necessary libraries such as GNU gcc and Fortran already installed.  
 &nbsp;
 
-Important Note: If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name.  
+Important Note: If something breaks or doesn't compile correctly, often times the best solution is to delete everything, restart your smic/linux terminal and start from scratch.  It is unfortunate, but starting over is often times faster than banging your head against the wall only for you to realize that the problem was you mistyped a variable name. 
+&nbsp;
 
-# Tars
+Important Note: I highly recommend trying to go through the entire compilation process for both WRF and WPS in one go.  I don't recommend getting halfway through then stopping and coming back to it later.  It is very easy to lose track of which environmental variables you've exported. If you turn your computer off or restart the terminal, those variables will be reset and no longer exist (further explaination later).  Again, it can be annoying, but the best way to complete this tutorial is to do it all in one session.  
+&nbsp;
+
+# Setting up the "build-wrf" Directory
 The first step is to prepare your tars and get your files in order.  We will make your build-wrf directory and download the necessary [WRF](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz)/[WPS](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz) tars
 To get the WRF compilation tars for other versions of WRF, you can visit [THIS](https://github.com/wrf-model/WRF/releases) github.  
 * Type:
@@ -24,7 +28,7 @@ wget https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz
 cd ..
 ```
 
-# Acquiring System Environment Tests
+# System Environment Tests
 The Second step is to ensure your gfortran, cpp, and gcc are working.  
 If you're compiling WRF on LSU's systems then these compilers should work without any issue as they are all preinstalled on the system.
 If there is a version on the system then the below commands will identify the path to each.
@@ -50,7 +54,7 @@ tar -xf Fortran_C_tests.tar
 ![image](https://github.com/user-attachments/assets/1941f32d-4dd2-4af8-8f26-b7e9ae678f23)
 I have a typo in the image above, I make the "/tests" directory in my "build-wrf/wrf_tars" directory.  Don't worry about that and just follow the instructions in the code blocks.
 
-### Conducting System Environment Tests
+## Conducting System Environment Tests
 * There are seven tests that will be run.  Each is a subheading below.
 * From your "/work/[your_username]/build-wrf/tests" directory Type:
 ### Test #1
@@ -109,7 +113,7 @@ Next, The libraries for GNU/gcc and WRF in general need to be built, but there a
 These will also be specific versions of the libraries which may be outdated in the future.  If the versions used here do not work, you can check the forum tutorial linked above and UCAR's [files](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/) to find the most up-to-date libraries.  
 
 &nbsp;
-
+## Export Variables
 * First you're going to set some variables that the compilation process expects.  Be warned, setting variables from the terminal in this manner does not save them.  When you close your smic/linux terminal, they will disappear and you will need to retype them.  They will be saved if added to your .bashrc file, but that will be handled at the end.
 * Within your "/work/[your_username]/build-wrf" directory type:
 ```
@@ -130,7 +134,7 @@ I have a typo in the above image.  Instead of setting "F77=gfortran" I accidenta
 
 &nbsp;
 
-### Install NetCDF-c
+## Install NetCDF-c
 Within the "/work/[your_username]/build-wrf/libraries" directory, type:
 ```
 wget https://github.com/Unidata/netcdf-c/archive/v4.7.2.tar.gz
@@ -158,7 +162,7 @@ Within the "build-wrf/libraries" directory, there should now be the "netcdf" and
 
 &nbsp;
 
-### Setting More Environmental Variables Post NetCDF-C
+## Exporting More Environmental Variables Post NetCDF-c
 These are variables to set AFTER successfully installing NETCDF-C.  Setting these before you install NETCDF-C will cause the library install to break.  So if you need to restart the entire compilation process or reinstall NETCDF-C, be sure to remove the below variables or restart your smic/linux terminal so  these variables will no longer be set.
 * Type:
 ```
@@ -172,7 +176,7 @@ export CPPFLAGS=-I$DIR/netcdf/include
 
 &nbsp;
 
-### Installing netcdf-fortran
+## Installing NetCDF-Fortran
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://github.com/Unidata/netcdf-fortran/archive/v4.5.2.tar.gz
@@ -189,7 +193,7 @@ rm v4.5.2.tar.gz
 
 &nbsp;
 
-### Installing mpich
+## Installing mpich
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/mpich-3.0.4.tar.gz  
@@ -205,7 +209,7 @@ export PATH=$DIR/mpich/bin:$PATH
 
 &nbsp;
 
-### Installing zlib
+## Installing zlib
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/zlib-1.2.11.tar.gz
@@ -219,12 +223,12 @@ rm zlib-1.2.11.tar.gz
 export LDFLAGS="-L$DIR/grib2/lib -L$DIR/netcdf/lib"
 export CPPFLAGS="-I$DIR/grib2/include -I$DIR/netcdf/lib"
 ```
-* ![image](https://github.com/user-attachments/assets/ada181cd-b96e-498e-9ad0-c2b472d0979e)  
+![image](https://github.com/user-attachments/assets/ada181cd-b96e-498e-9ad0-c2b472d0979e)  
 
 &nbsp;
 
 
-### Installing libpng
+## Installing libpng
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/libpng-1.2.50.tar.gz
@@ -240,7 +244,7 @@ rm libpng-1.2.50.tar.gz
 &nbsp;
 
 
-### Installing jasper  
+## Installing jasper  
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/jasper-1.900.1.tar.gz
@@ -255,7 +259,7 @@ rm jasper-1.900.1.tar.gz
 
 &nbsp;
 
-### Installing hdf5
+## Installing hdf5
 * From the "/work/[your_username]/build-wrf/libraries" directory type:
 ```
 wget https://github.com/HDFGroup/hdf5/archive/hdf5-1_10_5.tar.gz
@@ -279,7 +283,7 @@ You've ensured the compilers are compatible, but now we need to ensure that the 
 wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_NETCDF_MPI_tests.tar
 ```
 
-### Test #1
+## Library Test #1
 * Type:
 ```
 cp ${NETCDF}/include/netcdf.inc .
@@ -292,7 +296,7 @@ gfortran 01_fortran+c+netcdf_f.o 01_fortran+c+netcdf_c.o \-L${NETCDF}/lib -lnetc
   * "C function called by Fortran
   * Values are xx = 2.00 and ii = 1
   * SUCCESS test 1 fortran + c + netcdf"
-### Test #2
+## Library Test #2
 * Type:
 ```
 mpif90 -c 02_fortran+c+netcdf+mpi_f.f
@@ -312,9 +316,9 @@ cd ..
 
  &nbsp;  
 
- # Building WRF and WPS
-Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use version [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz) with [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz).  The configureation choices will be chosen with LSU's systems in mind.  
-### Configuring WRF
+# Building WRF
+Now we can actually compile WRF and then WPS.  For this tutorial and in general, I use version [WRF-4.2.2](https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz).  The configuration choices will be chosen with LSU's systems in mind.  
+## Configuring WRF
 * From the "/work/[your_username]/build-wrf/" directory type:
 ```
 wget https://github.com/wrf-model/WRF/archive/refs/tags/v4.2.2.tar.gz
@@ -336,24 +340,23 @@ cd WRF-4.2.2
     * type "1" for the "Compile for nesting?" option.  This allows nested simulations.
     * ![image](https://github.com/user-attachments/assets/6ac672f6-c70b-44ab-9d73-add55803f8ed)  
 
-### Removing Leap Years from WRF
+## Removing Leap Years from WRF
 If you wish to compile your WRF without Leap Days (i.e., skips Feb. 29th every 4 years), follow these steps.  If you want leap-days then you can skip to the "Compiling WRF" step
 * From the "/work/[your_username]/build-wrf/WRF-4.2.2" directory open the "configure.wrf" file.
 * Navigate down to the "Architecture Specific Settings" section.
 * To the line "ARCH_LOCAL" add at the end, "-DNO_LEAP_CALENDAR"
 * Save and close "configure.wrf"
-* ![image](https://github.com/user-attachments/assets/9ddbde93-1be7-490c-9338-e98fb80f2e42)
+![image](https://github.com/user-attachments/assets/9ddbde93-1be7-490c-9338-e98fb80f2e42)
 
-* This is the end of the Removing Leap Years Section
 
 &nbsp;
 
 
-Once you've either skipped the leap year removal or completed it, proceed here.
 
 &nbsp;
 
-### Compiling WRF
+## Compiling WRF
+Now that you've configured WRF either with or without leap days pick back up here!
 * From the "/work/[your_username]/build-wrf/WRF-4.2.2" directory type:
 ```
 ./compile em_real >& log.compile
@@ -376,8 +379,9 @@ Congrats! You've successfully compiled WRF-4.2.2 and now we only need to worry a
 
 
 &nbsp;
-
-### Configuring WPS
+# Building WPS
+Now that WRF is built, we can build WPS.  I will be using [WPS-4.2](https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz) which is compatible with WRF-4.2.2.  WPS configuration choices will be chosen with LSU's systems in mind.
+## Configuring WPS
 This step will build the WRF-Preprocessing System.  It will be very similar to the Building WRF section.  
 First, download and extract the WPS directory.  
 * From the "/work/[your_username]/build-wrf" directory type:
@@ -399,7 +403,7 @@ export WRF_DIR=/work/[your_username]/build-wrf/WRF-4.2.2
 *  There will be 40 options for compilers to use for WPS.  We want to compile WPS with the same compiler chosen in the Building WRF step.  For myself—because we used gfortran, want the ability to use clusters on LSU systems, and nest simulations—we are choosing the "Linux x86_64, gfortran (dmpar)" option.
 ![image](https://github.com/user-attachments/assets/9eac0e28-2819-4265-9b9b-3637e58b857f)
 
-### Removing Leap Years from WPS
+## Removing Leap Years from WPS
 Similar to WRF, if you're running a similation with a Feb. 29th but your forcing data doesn't account for leap days, WPS will fail to run.  This step tells you how you can prevent WPS from incorporating Feb. 29th.  This step is not necessary and you can skip to the "Compiling WPS" section below.
 * After configuring WPS, a "configure.wps" file will be created.
   * Open the "configure.wps"
@@ -417,7 +421,7 @@ Similar to WRF, if you're running a similation with a Feb. 29th but your forcing
 
  &nbsp;
 
-### Compiling WPS
+## Compiling WPS
  If you completed or skipped the "Removing Leap Years from WPS" section, pick back up here with the compilation!
 * From the "/work/[your_username]/build-wrf/WPS-4.2" directory type:
 ```
@@ -444,7 +448,7 @@ cd ..
 
    &nbsp;
 
-   # Static Geography Data
+# Static Geography Data
 The hard parts are done, now you just need the "static geography data."  These are variables such as soiltype or albedo or land useage that does not change often and so is considered "static" data necessary for WRF to run.  
 The link to the download page is [HERE](https://www2.mmm.ucar.edu/wrf/users/download/get_sources_wps_geog.html). 
 
