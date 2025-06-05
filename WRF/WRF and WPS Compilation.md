@@ -25,7 +25,7 @@ wget https://github.com/wrf-model/WPS/archive/refs/tags/v4.2.tar.gz
 cd ..
 ```
 
-# System Environment Tests
+# Acquiring System Environment Tests
 The Second step is to ensure your gfortran, cpp, and gcc are working.  
 If you're compiling WRF on LSU's systems then these compilers should work without any issue as they are all preinstalled on the system.
 If there is a version on the system then the below commands will identify the path to each.
@@ -39,69 +39,94 @@ which gcc
 
 &nbsp;
 
-* Within the "build_wrf" directory, create a new directory called "tests".
-* "cd" into the new "tests" directory.
-* use "wget" to download the Fortran and C Tests from [HERE](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_tests.tar).  
-![image](https://github.com/user-attachments/assets/1941f32d-4dd2-4af8-8f26-b7e9ae678f23).
-* Unpack the tar file with "tar -xf Fortran_C_tests.tar".
-There are Seven tests that will be run.  Each is a subheading below.  
+* You should be within the "build-wrf" directory, you can type "pwd" to see which directory you're in.
+* Now you will download the test files to ensure that Fortran and C are operating correctly.
+* From your /work/[your_username]/build-wrf directory type:
+```
+mkdir tests
+cd tests
+wget https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/Fortran_C_tests.tar
+tar -xf Fortran_C_tests.tar
+``` 
+![image](https://github.com/user-attachments/assets/1941f32d-4dd2-4af8-8f26-b7e9ae678f23)
+I have a typo in the image above, I make the "/tests" directory in my "build-wrf/wrf_tars" directory.  Don't worry about that and just follow the instructions in the code blocks.
+
+### Conducting System Environment Tests
+* There are seven tests that will be run.  Each is a subheading below.
+* From your "/work/[your_username]/build-wrf/tests" directory Type:
 ### Test #1
-* Type "gfortran TEST_1_fortran_only_fixed.f".
-* Type "./a.out".
+```
+gfortran TEST_1_fortran_only_fixed.f
+./a.out
+```
 * The following should be outputted: "SUCCESS test 1 fortran only fixed format".
 ### Test #2
-* Type "gfortran TEST_2_fortran_only_free.f90".
-* Type "./a.out".
+```
+gfortran TEST_2_fortran_only_free.f90
+./a.out
+```
 * The following should be outputted: "Assume Fortran 2003: has FLUSH, ALLOCATABLE, derived type, and ISO C Binding
 SUCCESS test 2 fortran only free format".  
 ### Test #3
-* Type "gcc TEST_3_c_only.c".
-* Type "./a.out".
+```
+gcc TEST_3_c_only.c
+./a.out
+```
 * The Following should be outputted: "SUCCESS test 3 C only".
 ### Test #4
-* Type "gcc -c -m64 TEST_4_fortran+c_c.c".
-* Type "gfortran -c -m64 TEST_4_fortran+c_f.f90".
-* Type "gfortran -m64 TEST_4_fortran+c_f.o TEST_4_fortran+c_c.o".
-* Type "./a.out".
+```
+gcc -c -m64 TEST_4_fortran+c_c.c
+gfortran -c -m64 TEST_4_fortran+c_f.f90
+gfortran -m64 TEST_4_fortran+c_f.o TEST_4_fortran+c_c.o
+./a.out
+```
 * The following should be outputted: "C function called by Fortran
 Values are xx = 2.00 and ii = 1
 SUCCESS test 4 fortran calling c".
 ### Test #5
 In addition to the mentioned compilers the WRF build system relies on scripts as the user interface which rely on csh, perl, and sh.  
 These tests ensure csh, perl, and sh are working properly.  
-* Type "./TEST_csh.csh".
+```
+./TEST_csh.csh
+```
 * The following should be outputted: "SUCCESS csh test".
 ### Test #6
-* Type "./TEST_perl.pl".
+```
+./TEST_perl.pl
+```
 * The following should be outputted: "SUCCESS perl test".
 ### Test #7
-* Type "./TEST_sh.sh".
+```
+./TEST_sh.sh
+cd ..
+```
 * The following should be outputted: "SUCCESS sh test".
 
 &nbsp;
 
 # Building Libraries  
-Next, The libraries for GNU/gcc need to be built.  There are different ways people install the necessary libraries for WRF.  The [official](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) instructions do not work for me (There's something in the configure arguments that don't play nicely on LSU's systems), but following [MLandreau's](https://forum.mmm.ucar.edu/threads/ubuntu-20-04-configure-netcdf-fortran-4-5-2-error-c-compiler-cannot-create-executables.12707/) steps from the linked forum (9th entry down) consistently works.  This section will follow those steps for the library installation.  
+Next, The libraries for GNU/gcc and WRF in general need to be built, but there are different ways people install these depending on specific environments and systems.  The [official](https://forum.mmm.ucar.edu/threads/full-wrf-and-wps-installation-example-gnu.12385/) instructions do not work for me (There's something in the configure arguments that don't play nicely on LSU's systems), but following [MLandreau's](https://forum.mmm.ucar.edu/threads/ubuntu-20-04-configure-netcdf-fortran-4-5-2-error-c-compiler-cannot-create-executables.12707/) steps from the linked forum (9th entry down) consistently works.  This section will follow those steps for the library installation.  
 
-The commands within this tutorial will be for specific versions of the libraries which may be outdated in the future.  If the versions used here do not work, you can check the forum tutorial linked above and UCAR's [files](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/) to find the most up-to-date libraries.  
+These will also be specific versions of the libraries which may be outdated in the future.  If the versions used here do not work, you can check the forum tutorial linked above and UCAR's [files](https://www2.mmm.ucar.edu/wrf/OnLineTutorial/compile_tutorial/tar_files/) to find the most up-to-date libraries.  
 
 &nbsp;
 
-* Within the "build-wrf" directory make a new directory with the command "mkdir libraries"  
-This is the directory where the essential WRF libraries will be installed.
-
-* Type the below set of commands on individual lines to set environment variables.  Be warned, until we add them to the .bashrc file, they will be cleared if you close the terminal.  I won't be enclosing them in quotes because some of the commands have quotes within the command itself, but I do have a photo showing each as well.
-* If interested, these are setting variables that will come up for much of the compilation process
-* DIR=[path-to-your-libraries]/libraries
-* export CC=gcc  
-* export CXX=g++  
-* export FC=gfortran  
-* export FCFLAGS=-m64  
-* export F77=gfortran  
-* export FFLAGS=-m64  
-* export JASPERLIB=$DIR/grib2/lib  
-* export JASPERINC=$DIR/grib2/include  
-![image](https://github.com/user-attachments/assets/07902164-c181-49d8-820f-370fd3795ab7)
+* First you're going to set some variables that the compilation process expects.  Be warned, setting variables from the terminal in this manner does not save them.  When you close your smic/linux terminal, they will disappear and you will need to retype them.  They will be saved if added to your .bashrc file, but that will be handled at the end.
+* Within your "/work/[your_username]/build-wrf" directory type:
+```
+mkdir libraries
+DIR=[path-to-your-libraries]/libraries
+export CC=gcc  
+export CXX=g++  
+export FC=gfortran  
+export FCFLAGS=-m64  
+export F77=gfortran  
+export FFLAGS=-m64  
+export JASPERLIB=$DIR/grib2/lib  
+export JASPERINC=$DIR/grib2/include  
+```
+![image](https://github.com/user-attachments/assets/07902164-c181-49d8-820f-370fd3795ab7)  
+I have a typo in the above image.  Instead of setting "F77=gfortran" I accidentally set "F77=-m64"
 
 &nbsp;
 
