@@ -10,7 +10,7 @@
    - [gcc: error: unrecognized command-line option '-V'](#gcc-error-unrecognized-command-line-option--v)  
    - [error while loading shared libraries: libpng12.so.0](#error-while-loading-shared-libraries-libpng12so0)
    - [Segmentation Fault](#Segmentation-fault)
-   - [Domain Size Too Small for This Many Processors for One Domain](#Domain-Size-Too-Small-for-This-Many-Processors-for-One-Domain)
+   - [Efficient WRF Simulation and Domain Decomposition](#Efficient-WRF-Simulation-and-Domain-Decomposition)
    - [Problems of SST of 0 values on the met_em files](#Problems-of-SST-of-0-values-on-the-met_em-files)
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
@@ -95,6 +95,7 @@ Often a CFL error, but it might not flag the CFL keyword in the error files.  Th
 Most often I have solved this error by increasing the "epssm" variable in the namelist.input (e.g., 0.4->0.9).  
 The epssm variable relates to vertical wave propogation. If your simulation takes place over complex mountainous terrain or includes some other rapid vertical transport (Hurricanes), a CFL error could be the problem in disguise.  Most recently, this error occurred for me because I had a simulation in December over the continental United States.  A synoptic system was crossing the Rocky Mountains at the time the error threw.  By raising the epssm, the error resolved itself.
 
+<!--
 # Domain Size Too Small for This Many Processors for One Domain
 Sometimes your domain will be an odd shape or you need more processors than the default wrf formula allows (such as if you were running chemistry).  
 If you choose a high number of processors are are met with a "the domain size is too small for this many processors, or the decomposition aspect ratio is poor" error, nproc_x and nproc_y are possible solutions.  
@@ -112,7 +113,144 @@ This error was thrown for a rectangular domain that needed at least 100 processo
 * The result is that we can set "nproc_x=20" and "nproc_y=5".  
 * This reduces the number of processors in the y-direction, allowing each processor to have at least 10 gridcells, while 20*5=100.  
 * ![image](https://github.com/user-attachments/assets/812f236c-0805-4fe1-9594-0a25d052b8df).  
+-->
 
+# Efficient WRF Simulation and Domain Decomposition
+
+Running a WRF simulation is straightforward, but doing it **efficiently**—especially when simulating dust transport from Africa to Puerto Rico or other parts of the Americas—is much more complex. These long-distance domains are often **rectangular**, rather than square (which WRF prefers).
+
+## Why Processor Decomposition Matters
+
+Sometimes your domain will be an odd shape or you need more processors than the default WRF formula allows (such as if you were running chemistry).  
+If you choose a high number of processors and are met with a `"the domain size is too small for this many processors, or the decomposition aspect ratio is poor"` error, `nproc_x` and `nproc_y` are possible solutions.
+
+If you simply select `16` processors, WRF will usually default to a square decomposition:
+```text
+nproc_x = 4
+nproc_y = 4   # Because 4 × 4 = 16
+```
+However, for **rectangular domains**, this choice is often **inefficient**. You should not blindly assign the same number of processors to X and Y directions.
+
+---
+
+## Example Domain Setup
+
+```fortran
+&domains
+ max_dom = 3
+ e_we    = 221, 65, 57
+ e_sn    = 61,  45, 37
+```
+
+Let’s assume you must run with a small number of processors, say **4 cores**—this would work but may not be optimal.
+
+---
+
+## Rules for Choosing `nproc_x` and `nproc_y`
+
+1. **Each processor must handle at least 10 grid cells** in each direction:
+   ```text
+   (e_we - 1) / nproc_x ≥ 10
+   (e_sn - 1) / nproc_y ≥ 10
+   ```
+
+2. **The same `nproc_x` and `nproc_y` apply to all domains.**
+3. **Total Processors = nproc_x × nproc_y**
+
+---
+
+## Minimum Grid Sizes → Determine Max Processors
+
+From the third domain:
+- `e_we = 57 → 56 cells → 56 / 10 ≈ 5 → nproc_x ≤ 5`
+- `e_sn = 37 → 36 cells → 36 / 10 ≈ 3 → nproc_y ≤ 3`
+
+So the safest **maximum** decomposition is:
+```text
+nproc_x = 5
+nproc_y = 3
+```
+This setup uses `5 × 3 = 15 processors`, which respects the rules above.
+
+---
+
+## Common Error and Its Solution
+
+![Error Example](https://github.com/user-attachments/assets/57a513a8-1943-4b5f-9380-8c29bb6786c5)
+
+This error was thrown for a rectangular domain that needed at least 100 processors to run in a reasonable time frame.  
+WRF by default split the total processors (100) evenly:
+```text
+nproc_x = 10
+nproc_y = 10
+```
+This made each processor handle only 6 grid cells in the y-direction (below the required 10), causing the error.
+
+**Solution:** set
+```text
+nproc_x = 20
+nproc_y = 5
+```
+This ensures each processor gets enough grid cells in both directions:
+![Corrected Setup](https://github.com/user-attachments/assets/812f236c-0805-4fe1-9594-0a25d052b8df)
+
+---
+
+## Enhancing Efficiency: Adjust Domain Dimensions
+
+You can slightly modify the domains to allow **better parallelism**:
+
+```fortran
+&domains
+ max_dom = 3
+ e_we    = 221, 65, 60
+ e_sn    = 61,  45, 40
+```
+
+With these rounded values:
+- `e_we = 60 → 59 cells → 59 / 6 ≈ 9.8`
+- `e_sn = 40 → 39 cells → 39 / 4 ≈ 9.75`
+
+So now you can use:
+```text
+nproc_x = 6
+nproc_y = 4
+```
+→ 24 processors with better load balancing and faster simulation time.
+
+---
+
+## ⚠️ Important Notes
+
+- Comment the lines `nproc_x` and `nproc_y` like this `!nproc_x = 6` in the `namelist.input` **before running `real.exe`** to avoid errors.
+- After `real.exe`, uncomment them for `wrf.exe`.
+
+Also, your SLURM scripts for `real.exe` and `wrf.exe` must request **the same number of processors**.
+
+### For Real
+```bash
+#SBATCH -N 1    
+#SBATCH -n 20   
+srun -N1 -n15 ./real.exe > real.log 2>&1
+```
+
+### For WRF
+```bash
+#SBATCH -N 1                           
+#SBATCH -n 20                          
+srun -N1 -n15 ./wrf.exe > wrf.log 2>&1
+```
+
+---
+
+## ✅ Summary
+
+- Always analyze **grid size** before choosing processor count.
+- Ensure `(e_we - 1) % nproc_x == 0` and `(e_sn - 1) % nproc_y == 0`.
+- Each processor should handle **at least 10×10 cells**.
+- For rectangular domains → **asymmetric decomposition**.
+- Adjust domain dimensions when possible.
+- Efficient processor decomposition improves performance and avoids runtime errors.
 
 # Problems of SST of 0 values on the met_em files
 "If you are planning to run simulations that go out for more than about a week, it's advised to use an outside source for SST data. Most datasets (for e.g., GFS) typically come with an SST field, but they are usually coarse and not reliable for an extended time. If you are not doing long simulations, then it's okay to skip the outside SST source. In that case, you don't even need to specify anything extra in the namelist.input file - so you don't need to add sst_update, and it's corresponding settings." 
