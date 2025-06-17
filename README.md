@@ -19,6 +19,12 @@ Guides and common pit-falls for those new to LSU.
 ### Hysplit
 Information about incorporating wrfout files into the hysplit modeling framework.
 
+# Saharan Dust events Database
+To access our database of Saharan dust events, please click on the link below:
+
+[Database of Saharan dust events](https://github.com/hdolce/DERSAD-Database)
+
+Please contact cdolce4@lsu.edu for more details about the Saharan dust database
 
 # About Us
 This repository is maintained by lab members of the COMET Lab.  
