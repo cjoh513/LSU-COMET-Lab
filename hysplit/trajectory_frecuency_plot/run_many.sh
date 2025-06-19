@@ -8,10 +8,13 @@
 HYSPLIT_EXEC="/home/cometlab/Documents/Edwin/hysplit/hysplit.v5.3.4_UbuntuOS20.04.6LTS/exec"
 CONTROL_TEMPLATE="CONTROL_TEMPLATE.001"   # template with @YY@ @MM@ @DD@ @HH@ @YYYYMMDDHH@
 START="2022-05-31 00:00"                  # first start time  (UTC)
-END="2022-06-02 21:00"                    # last  start time  (UTC)
+END="2022-06-16 18:00"                    # last  start time  (UTC)
 STEP_HR=6                                   # hours between successive starts
 
 # ---------- no editing needed below this line ----------------
+
+# Delete previous files
+rm tdump_*
 
 start_epoch=$(date -u -d "$START" +%s) || { echo "Bad START time"; exit 1; }
 end_epoch=$(  date -u -d "$END"   +%s) || { echo "Bad END time";   exit 1; }
