@@ -4,7 +4,9 @@ Created on Fri Jun 13 12:43:43 2025
 
 @author: Philip_comet_lab
 
-This uses the simplified Penman-Monteith Equation to calculate evapotranspiration.
+This uses the simplified Penman-Monteith Equation to calculate evapotranspiration (ET).
+It calculates an average of ET from a directory containing however many wrfout files you desire.  In my case, I needed yearly average ET.  
+If you just need the equation, you can copy it from the interior loops.
 """
 
 import numpy as np
@@ -21,14 +23,13 @@ P_std    = 101.3       # kPa, standard pressure at sea level
 contour_range = [0,10.5,0.5] #For the Plotting function
 
 
-for year in range(1995,1996):
+for year in range(1995,1996): #1995 was the test year I used  
     ET_list = []
     outer_path = r"H:/MSD_"+str(year)
     file_list = [item for item in os.listdir(outer_path)]
     for item in file_list:
+        
         ds = xr.open_dataset(os.path.join(outer_path,item))
-        
-        
         
         
         # Extract variables
@@ -44,9 +45,7 @@ for year in range(1995,1996):
         GRDFLX = ds['GRDFLX']
         lats   = ds['XLAT'][0,:,:]
         lons   = ds['XLONG'][0,:,:]
-    
-
-
+        
 
         # Time-averaging for daily values (axis=0 is usually time)
         T = T2.mean(dim='Time')
@@ -70,8 +69,8 @@ for year in range(1995,1996):
         gamma = (cp * P) / (epsilon * lambda_v)
         
         # Wind speed at 2 m (u2)
-        #u2 = U * 0.748  # Approximate adjustment from 10 m to 2 m
-        u2 = U * (4.87/np.log(67.8*10-5.42))
+        #u2 = U * 0.748                         # Approximate adjustment from 10 m to 2 m   #I use the full logrithmic calculation instead but they are pretty comperable.  
+        u2 = U * (4.87/np.log(67.8*10-5.42))    # Change 10 to whatever distance above the ground you're measuring.  my wrfouts create 10-meter wind speed so that's what I use.
         
         
         # Penman-Monteith Equation
@@ -80,12 +79,13 @@ for year in range(1995,1996):
         ET0 = numerator / denominator  # mm/day
         
         ET_list.append(ET0)
-    
+
+    #average of the ET from the gathered list (per year)
     ET_avg = np.mean(np.asarray(ET_list),axis=0)
     
-    print(np.max(ET_avg),np.min(ET_avg))
+    print(np.max(ET_avg),np.min(ET_avg)) #I use this to get a better idea of the contour ranges
     
-    
+    #Plotting yearly average evapotranspiration taken from the wrfout_plotting_functions.py file
     plotting(lons=lons,
              lats=lats,
              plotted=ET_avg,
