@@ -12,7 +12,7 @@ If you just need the equation, you can copy it from the interior loops.
 import numpy as np
 import xarray as xr
 import os
-from wrf_precip_plotting_functions import plotting #My general plotting function that can be found "https://github.com/cjoh513/LSU-COMET-Lab/blob/main/Python/wrfout_plotting_functions.py"
+from wrf_precip_plotting_functions import plotting  #Not necessary but I use it to visualize the data.  This is my general plotting function that can be found "https://github.com/cjoh513/LSU-COMET-Lab/blob/main/Python/wrfout_plotting_functions.py"
 
 
 # Constants
