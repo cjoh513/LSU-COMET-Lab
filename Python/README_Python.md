@@ -5,6 +5,6 @@
 ### netcdf_plotting_functions.py
 * A Python script that contains many useful functions related to extracting and plotting variables within netCDFs
 ### wrfout_plotting_functions.py
-* A python script containing many useful functions related to extracting and plotting variables within wrfout files specifically.
-
-
+* A Python script containing many useful functions related to extracting and plotting variables within wrfout files specifically.
+### Penman_Monteith_evapotranspiration.py
+* Evapotranspiration equation using the Penman Monteith simplified formula.  This file in particular is designed to calculate the yearly average from wrfout files.
