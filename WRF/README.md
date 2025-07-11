@@ -17,3 +17,5 @@ Detailed information on using nproc_x and nproc_y
 Not our script.  Uploaded at the following [link](https://forum.mmm.ucar.edu/threads/choosing-an-appropriate-number-of-processors.5082/)
 ### send_wrf.sh
 An example of an LSU HPC job submission script
+### Convert from NetCDF to WPS
+A simple Python script for converting ERA5 netCDF files to the WPS intermediate format [link](https://github.com/NCAR/era5_to_int)
