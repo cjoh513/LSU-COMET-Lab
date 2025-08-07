@@ -130,21 +130,21 @@ def plotting(
     """
     This is my universal contour-fill plotting function.  I largely use it when I'm plotting a variable from WRF files, but it'll handle any 2d variable that you provide lat and lons for.  
     Each argument is optional because I also use this to create a generic map over a domain or to add a patch to it to identify domain regions
-    lons:          Array.               If unspecified it'll show the general global map from cartopy.  You can use the extent argument to zoom in too.  
+    lons:          Array.               Provides the 2-D lat values needed for the "contourf" function.  If unspecified it'll show the general global map from cartopy.  This argument is necessary if you're showing WRF data on the countour plot as it provides the data edges "contourf" expects.  If you're just making a generic map, lats/lons are not necessary  
     lats:          Array.               Same as lons but for latitude.  If you specify one you should specify the other
-    plotted:       Array.               The 2d array for whatever variable you want to plot the contour graphic for
-    contour_range: 3-item list.         [start, end, increment], [0,1005,100].  Sets the contour range for the contour fill for whatever. from a start to an end at an increment. If you have a "plotted" argument, you need to specify this and tick_range
-    tick_range:    3-item list.         Functions the same as the contour_range, but this one specifies the colorbar tick range.
-    colorbar:      Truth statemet.      True=colorbar is plotted, false it is not.  Will only show if plotted!=None
-    cbar_extent:   String.              'min', 'max', 'both'.  Specifies which sides of the colorbar show the extending arrows indicating values beyond the color bar
-    cmap:          string.              Specify which colormap you want.
-    extent:        4-item list.         [left, right, bottom, top].  Sets the extent of the grpahic, but doesn't alter data in any way.  without it, the graph defaults the extents to the edges of the plotted data
+    plotted:       Array.               The 2d array for whatever WRF or other 2D variable you want to plot the contour graphic
+    contour_range: 3-item list.         [start, end, increment]. e.g., [0,1005,100].  Sets the contour range for the contour fill for whatever. from a start to an end at an increment. If you have a "plotted" argument, you need to specify this and tick_range
+    tick_range:    3-item list.         Functions the same as the "contour_range", but this one specifies the colorbar tick range.  Often, you can use the same values you used for "contour_range".
+    colorbar:      Truth statemet.      Whether the colorbar is plotted or not.  "True" means the colorbar is plotted, "False" means it is not.  Will only show if you are using the "plotted" argument
+    cbar_extent:   String.              Specifies which sides of the colorbar show the extending arrows indicating values beyond the color bar. 'min', 'max', 'both' are the 3 options available
+    cmap:          string.              Specify which colormap you want. Defaults to viridis.
+    extent:        4-item list.         [left, right, bottom, top].  Sets the visual extent of the graphic, but doesn't alter data in any way.  without it, the graph defaults the extents to the edges of the plotted data based on the lats/lons
     title:         string.              Sets the title of the graph if desired.
-    save_path:     1- or 2-item list.   [path to directory to save(e.g., r"F:\MSD_2096_middle"), file name without .png(e.g., file_name)]. the example would result in a file saved as r"F:\MSD_2096_middle/file_name.png".  if only a one item list, it must be the directory path and the function will save the files name as the graphic title.
+    save_path:     1- or 2-item list.   [path to directory to save, file name without .png]. For example, [r"F:\MSD_2096_middle", 2096_precip_image] would result in a file saved as r"F:\MSD_2096_middle/2096_precip_image.png".  if only a one item list, it must be the directory path and the function will save the image name as the graphic title.
     projection:    cartopy prjoection.  Defaults to Plate Carree, but this can be specified 
     land_sea:      Truth statement.     If set to True, the land and sea made by cartopy will have colors. usually not useful for a contour plot, but when making a generic map or for including patches it can add a good look to the graphic.  This is just an aesthetics options
     patch:         4-item list.         [left, right, bottom, top].  function calculates the necessary height and width automatically when you provide the edge inputs.  for user input purposes, this operates exactly like the extent argument.  This applies a red patch.  as it stands now you'll need to manually alter the function to change the colors
-    grid_labels:   4-item truth list.   [left, right, bottom, top].  Which sides of the map you want lat/lon labels on.  Defaults to bottom and left
+    grid_labels:   4-item truth list.   [left, right, bottom, top].  Which sides of the map you want lat/lon labels on.  Defaults to bottom and left being on
     """
     #imports
     import matplotlib.pyplot as plt

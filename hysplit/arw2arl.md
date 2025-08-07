@@ -76,3 +76,7 @@ If everything is set up correctly, this should build the arw2arl executable.
 
 ✅ Done!
 You now have the arw2arl program compiled and ready to convert WRF output to the ARL format.
+
+
+🧱 5. Execute the code
+To execute the code follow the instructions of the point number 4 in the next [link](https://github.com/etcometlab/LSU-COMET-Lab/blob/main/hysplit/README.md)
