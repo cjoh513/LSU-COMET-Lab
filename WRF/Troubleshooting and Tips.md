@@ -12,9 +12,10 @@
    - [Segmentation Fault](#Segmentation-fault)
    - [Efficient WRF Simulation and Domain Decomposition](#Efficient-WRF-Simulation-and-Domain-Decomposition)
    - [Problems of SST of 0 values on the met_em files](#Problems-of-SST-of-0-values-on-the-met_em-files)
+   - [Overestimation of dust on WRF due to SKT](#Overestimation-of-dust-on-WRF-due-to-SKT)
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
-4. [Send a process after another on the cluster](Send-a-process-after-another-on-the-cluster)
+4. [Send a process after another on the cluster](#Send-a-process-after-another-on-the-cluster)
 
 
 # Compiling WRF with no Leap Years
@@ -243,6 +244,33 @@ srun -N1 -n15 ./wrf.exe > wrf.log 2>&1
 ```
 
 ---
+
+## Overestimation of dust on WRF due to SKT
+
+Why Removing `SKINTEMP` Helps Reduce Dust Overestimation in WRF-Chem
+
+In WRF, when SKINTEMP (skin temperature) is available in the GRIB input and included in the Vtable, it is prioritized over other temperature variables such as `T2` (2-meter temperature) and `SST` (sea surface temperature). This preference affects how surface fluxes are calculated during the simulation.
+
+When `SKINTEMP` is used, WRF may calculate stronger surface heating, which leads to:
+
+* Higher sensible heat flux
+* Increased friction velocity (u*)
+* Drier topsoil through enhanced evaporation
+* Enhanced vertical mixing
+
+These changes are especially important in dust source regions. Even a small increase in surface temperature can push friction velocity above the dust emission threshold, triggering significantly more dust release. As a result, including SKINTEMP in the preprocessing pipeline can lead to overestimation of dust emissions in WRF-Chem.
+
+By removing `SKINTEMP` from the Vtable, WRF defaults to using `T2` and `SST`, which tend to produce more conservative and realistic surface fluxes for dust emission modeling.
+
+This behavior is consistent with findings from the WRF user community and studies such as:
+
+* Kok et al. (2012), An improved dust emission model – Part 1: Model description and comparison against measurements
+
+* Wu and Lin (2014), Evaluation of the performance of WRF-Chem on dust simulations and its sensitivity to dust emission schemes
+
+* WRF Forum discussions on SKINTEMP's role in surface flux overestimation
+
+In summary, excluding `SKINTEMP` from your Vtable is a practical and effective step to reduce dust overestimation in WRF-Chem simulations driven by reanalysis data.
 
 ## ✅ Summary
 
