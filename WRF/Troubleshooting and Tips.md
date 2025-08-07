@@ -244,6 +244,14 @@ srun -N1 -n15 ./wrf.exe > wrf.log 2>&1
 ```
 
 ---
+## ✅ Summary
+
+- Always analyze **grid size** before choosing processor count.
+- Ensure `(e_we - 1) % nproc_x == 0` and `(e_sn - 1) % nproc_y == 0`.
+- Each processor should handle **at least 10×10 cells**.
+- For rectangular domains → **asymmetric decomposition**.
+- Adjust domain dimensions when possible.
+- Efficient processor decomposition improves performance and avoids runtime errors.
 
 ## Overestimation of dust on WRF due to SKT
 
@@ -272,14 +280,7 @@ This behavior is consistent with findings from the WRF user community and studie
 
 In summary, excluding `SKINTEMP` from your Vtable is a practical and effective step to reduce dust overestimation in WRF-Chem simulations driven by reanalysis data.
 
-## ✅ Summary
 
-- Always analyze **grid size** before choosing processor count.
-- Ensure `(e_we - 1) % nproc_x == 0` and `(e_sn - 1) % nproc_y == 0`.
-- Each processor should handle **at least 10×10 cells**.
-- For rectangular domains → **asymmetric decomposition**.
-- Adjust domain dimensions when possible.
-- Efficient processor decomposition improves performance and avoids runtime errors.
 
 # Problems of SST of 0 values on the met_em files
 "If you are planning to run simulations that go out for more than about a week, it's advised to use an outside source for SST data. Most datasets (for e.g., GFS) typically come with an SST field, but they are usually coarse and not reliable for an extended time. If you are not doing long simulations, then it's okay to skip the outside SST source. In that case, you don't even need to specify anything extra in the namelist.input file - so you don't need to add sst_update, and it's corresponding settings." 
