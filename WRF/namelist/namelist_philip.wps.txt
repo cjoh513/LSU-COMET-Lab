@@ -1,0 +1,92 @@
+&share
+ wrf_core = 'ARW',
+ max_dom = 3,
+! start_date = '1979-01-01_00:00:00','1979-01-01_00:00:00','1979-01-01_00:00:00',
+! end_date   = '1979-01-01_00:00:00','1979-01-01_00:00:00','1979-01-01_00:00:00',  ! ### INVs files
+
+ !start_date = '2018-01-01_00:00:00','2018-01-01_00:00:00', '2018-01-01_00:00:00', ! ### full run
+ !end_date   = '2018-03-31_18:00:00','2018-03-31_18:00:00', '2018-03-31_18:00:00',
+
+! start_date = '2018-04-01_00:00:00','2018-04-01_00:00:00', '2018-04-01_00:00:00', ! ### full run
+! end_date   = '2018-06-30_18:00:00','2018-06-30_18:00:00', '2018-06-30_18:00:00',
+ 
+! start_date = '2018-07-01_00:00:00','2018-07-01_00:00:00', '2018-07-01_00:00:00', ! ### full run
+! end_date   = '2018-09-30_18:00:00','2018-09-30_18:00:00', '2018-09-30_18:00:00',
+
+ start_date = '2018-10-01_00:00:00','2018-10-01_00:00:00', '2018-10-01_00:00:00', ! ### full run
+ end_date   = '2018-12-31_18:00:00','2018-12-31_18:00:00', '2018-12-31_18:00:00',
+
+
+ interval_seconds = 21600,
+ io_form_geogrid = 2,
+ debug_level = 100,
+/
+
+&geogrid
+ parent_id         = 1,1,2,
+ parent_grid_ratio = 1,4,4,
+ i_parent_start    = 1,38,22,
+ j_parent_start    = 1,22,19,
+ e_we          = 252,73,97,
+ e_sn          = 68,53,65,
+ geog_data_res = '10m','5m','30s',
+ dx = 64000,
+ dy = 64000,
+ map_proj =  'mercator',
+ ref_lat   = 21.74,
+ ref_lon   = -16.105,
+ truelat1  = 21.74,
+ truelat2  = 0,
+ stand_lon = -16.105,
+ geog_data_path = '/work/cjoh513/geog'
+ ref_x = 126.0,
+ ref_y = 34.0,
+/
+
+&ungrib
+ out_format = 'WPS',
+ prefix = '3D',
+/
+
+&metgrid
+ fg_name = '2D', '3D',
+ io_form_metgrid = 2,
+ constants_name = 'INV:1979-01-01_00'
+/
+
+&mod_levs
+ press_pa = 201300 , 200100 , 100000 ,
+             95000 ,  90000 ,
+             85000 ,  80000 ,
+             75000 ,  70000 ,
+             65000 ,  60000 ,
+             55000 ,  50000 ,
+             45000 ,  40000 ,
+             35000 ,  30000 ,
+             25000 ,  20000 ,
+             15000 ,  10000 ,
+              5000 ,   1000
+ /
+
+
+&domain_wizard
+ grib_data_path = 'null',
+ grib_vtable = 'null',
+ dwiz_name    =pr-sal_v1
+ dwiz_desc    =Two coarse domains
+ dwiz_user_rect_x1 =469
+ dwiz_user_rect_y1 =272
+ dwiz_user_rect_x2 =1375
+ dwiz_user_rect_y2 =496
+ dwiz_show_political =true
+ dwiz_center_over_gmt =true
+ dwiz_latlon_space_in_deg =10
+ dwiz_latlon_linecolor =-8355712
+ dwiz_map_scale_pct =12.5
+ dwiz_map_vert_scrollbar_pos =3
+ dwiz_map_horiz_scrollbar_pos =212
+ dwiz_gridpt_dist_km =64.0
+ dwiz_mpi_command =null
+ dwiz_tcvitals =null
+ dwiz_bigmap =Y
+/
