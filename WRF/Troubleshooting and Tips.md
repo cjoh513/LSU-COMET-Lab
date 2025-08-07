@@ -14,6 +14,7 @@
    - [Problems of SST of 0 values on the met_em files](#Problems-of-SST-of-0-values-on-the-met_em-files)
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
+4. [Send a process after another on the cluster](Send-a-process-after-another-on-the-cluster)
 
 
 # Compiling WRF with no Leap Years
@@ -276,6 +277,22 @@ If you erase the Vtable here you can find a fast copy
 
 
 
+# Send a process after another on the cluster
+
+You can execute a script on the cluster and automatically launch another one as soon as the first job finishes successfully. This is particularly useful, for example, when you need to run the `real.exe` step first and then start `wrf.exe`.
+
+```sh
+## Launch the first REAL job
+cd "${local_data_dir_feedback}feedback_0" || { echo "Failed to change directory to ${local_data_dir_feedback}feedback_0"; exit 1; }
+jobid_r0=$(sbatch "$local_data_dir_feedback/feedback_0/send_real.sh" | awk '{print $4}')
+echo "Job ID for feedback_0: $jobid_r0"
+
+## Submit both WRF jobs, depending on REAL jobs finishing successfully
+
+cd "${local_data_dir_feedback}feedback_0" || { echo "Failed to change directory to ${local_data_dir_feedback}feedback_0"; exit 1; }
+sbatch --dependency=afterok:$jobid_r0 "$local_data_dir_feedback/feedback_0/send_wrf.sh"
+echo "Job ID for feedback_0 WRF: $jobid_r0"
+```
 
 
 
