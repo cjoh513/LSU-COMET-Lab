@@ -16,6 +16,7 @@
 
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 4. [Send a process after another on the cluster](#Send-a-process-after-another-on-the-cluster)
+5. [Namelist explanation](#Namelist-explanation)
 
 
 # Compiling WRF with no Leap Years
@@ -323,5 +324,7 @@ sbatch --dependency=afterok:$jobid_r0 "$local_data_dir_feedback/feedback_0/send_
 echo "Job ID for feedback_0 WRF: $jobid_r0"
 ```
 
+# Namelist explanation
 
+[Namelist explanation](https://www2.mmm.ucar.edu/wrf/users/wrf_users_guide/build/html/namelist_variables.html)
 
