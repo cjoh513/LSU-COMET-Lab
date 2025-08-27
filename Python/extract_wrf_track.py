@@ -205,6 +205,11 @@ def main():
         kml_path = f"track_{dom}.kml"
         write_kml(df, kml_path)
 
+    '''
+    Way to run:
+    python extract_wrf_track.py --glob "/path/to/wrfout_d03_2005-08-*_00:00:00" --radius_km 100 --kml
+    '''
+
 if __name__ == "__main__":
     '''
     way of execute
