@@ -331,7 +331,7 @@ echo "Job ID for feedback_0 WRF: $jobid_r0"
 
 # Panoply problems to plot with WRF4+
 
-I found that when you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`.
+When you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`.
 
 ### Solution
 
