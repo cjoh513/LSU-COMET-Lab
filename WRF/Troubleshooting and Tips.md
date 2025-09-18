@@ -17,6 +17,7 @@
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 4. [Send a process after another on the cluster](#Send-a-process-after-another-on-the-cluster)
 5. [Namelist explanation](#Namelist-explanation)
+6. [Panoply problems to plot](#Panoply-problems-to-plot-with-WRF4+)
 
 
 # Compiling WRF with no Leap Years
@@ -327,4 +328,38 @@ echo "Job ID for feedback_0 WRF: $jobid_r0"
 # Namelist explanation
 
 [Namelist explanation](https://www2.mmm.ucar.edu/wrf/users/wrf_users_guide/build/html/namelist_variables.html)
+
+# Panoply problems to plot with WRF4+
+
+I found that when you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`.
+
+### Solution
+
+If you need to use Mercator, you must add `truelat1` and `stand_lon`.  
+These are the same as `ref_lat` and `ref_lon`, respectively, as shown in the following example:
+
+```fortran
+&geogrid
+ parent_id            = 1
+ parent_grid_ratio    = 1
+ i_parent_start       = 1
+ j_parent_start       = 1
+ e_we                 = 148
+ e_sn                 = 137
+ geog_data_res        = 'default'
+ dx                   = 4000
+ dy                   = 4000
+ map_proj             = 'mercator'
+ ref_lat              = 30.886
+ ref_lon              = -91.469
+ truelat1             = 30.940
+ stand_lon            = -91.469
+ pole_lat             = 90
+ pole_lon             = 0
+ geog_data_path       = 'geog'
+ geog_data_path       = '../WPS_GEOG'
+/
+```
+
+After this adjustment, you can plot in Panoply (at least the geo_em files).
 
