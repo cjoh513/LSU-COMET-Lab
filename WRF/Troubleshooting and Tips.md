@@ -17,7 +17,7 @@
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 4. [Send a process after another on the cluster](#Send-a-process-after-another-on-the-cluster)
 5. [Namelist explanation](#Namelist-explanation)
-6. [Panoply problems to plot](#Panoply-problems-to-plot-with-WRF4+)
+6. [Panoply problems to plot with WRF4+](#Panoply-problems-to-plot-with-WRF4+)
 
 
 # Compiling WRF with no Leap Years
@@ -361,5 +361,5 @@ These are the same as `ref_lat` and `ref_lon`, respectively, as shown in the fol
 /
 ```
 
-After this adjustment, you can plot in Panoply (at least the geo_em files).
+After this adjustment, you can plot in Panoply.
 
