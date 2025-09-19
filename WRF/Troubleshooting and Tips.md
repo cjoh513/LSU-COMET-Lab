@@ -17,7 +17,7 @@
 3. [If You Delete Your Vtable](#if-you-delete-your-vtable)
 4. [Send a process after another on the cluster](#Send-a-process-after-another-on-the-cluster)
 5. [Namelist explanation](#Namelist-explanation)
-6. [Panoply problems to plot with WRF4+](#Panoply-problems-to-plot-with-WRF4+)
+6. [Panoply problems to plot with WRF4](#Panoply-problems-to-plot-with-WRF4)
 
 
 # Compiling WRF with no Leap Years
@@ -329,7 +329,7 @@ echo "Job ID for feedback_0 WRF: $jobid_r0"
 
 [Namelist explanation](https://www2.mmm.ucar.edu/wrf/users/wrf_users_guide/build/html/namelist_variables.html)
 
-# Panoply problems to plot with WRF4+
+# Panoply problems to plot with WRF4
 
 When you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`.
 
