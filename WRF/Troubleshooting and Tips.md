@@ -352,7 +352,7 @@ These are the same as `ref_lat` and `ref_lon`, respectively, as shown in the fol
  map_proj             = 'mercator'
  ref_lat              = 30.886
  ref_lon              = -91.469
- truelat1             = 30.940
+ truelat1             = 30.886
  stand_lon            = -91.469
  pole_lat             = 90
  pole_lon             = 0
