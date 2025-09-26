@@ -65,3 +65,5 @@ cat plot_006.ps >> results.ps
 
 bash run_trajectory.sh
 ```
+<img width="875" height="889" alt="image" src="https://github.com/user-attachments/assets/ac72aa0d-33f1-46fb-beb1-fa08e7cdd46b" />
+
