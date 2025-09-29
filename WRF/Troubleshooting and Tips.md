@@ -331,7 +331,7 @@ echo "Job ID for feedback_0 WRF: $jobid_r0"
 
 # Panoply problems to plot with WRF4
 
-When you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`.
+When you are using **Domain Wizard Online** with the **Mercator** projection, `domainWizard` does not provide the parameters `truelat1` and `stand_lon`. When you don't have these parameters, Panoply is going to have an error and will never be able to display your data (I'll never stop charging your data).
 
 ### Solution
 
