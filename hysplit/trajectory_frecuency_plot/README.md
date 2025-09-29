@@ -47,7 +47,7 @@ bash run_many.sh
 3) Run to made the graphs
 
 ```sh
-bash run_graphs.sh
+bash run_graphs.sh (execute.sh)
 ```
 
 <img width="590" height="305" alt="image" src="https://github.com/user-attachments/assets/75ae0779-34ca-4dcc-92ba-b0596d8df0cd" />
