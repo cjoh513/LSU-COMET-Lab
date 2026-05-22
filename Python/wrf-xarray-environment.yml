@@ -1,0 +1,17 @@
+name: wrf-xarray
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.12
+  - xarray
+  - dask
+  - netcdf4
+  - h5netcdf
+  - wrf-python
+  - numpy
+  - pandas
+  - matplotlib
+  - cartopy
+  - jupyterlab
