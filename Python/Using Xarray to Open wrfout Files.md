@@ -50,3 +50,5 @@ You can use the Evironment YAML (wrf-xarray-environment.yml) file to create the 
 conda env create-f wrf-xarray-environment.yml
 conda activate wrf-xarray
 ```
+
+Unfinished. Next steps are to discuss Datasets and DataArrays then how to open files
