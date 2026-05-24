@@ -68,3 +68,24 @@ The two important datas strucutres are designed to bolster NumPy and Pandas arra
 So when you use Xarray to open a wrfout file, you are opening a Dataset and then can extract specific DataArrays by calling for the variables of interest.
 
 # Opening and Viewing Datasets and DataArrays
+Once installed and you've ensured that you can import the necessary packages, it's time to get started.  
+
+The first step is practice opening and understanding the wrfout file.
+## Opening A Single File
+The basic function to open a file is [xarray.open_dataset](https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html). This function loads in a single file as the Dataset structure.
+```
+import xarray as xr
+path = [path\to\wrfout\file]
+ds = xr.open_dataset(path)
+print(ds)
+```
+The below example is what the code block would print from a wrfout file examining at June 1, 2014 over a rectangular domain across the Atlantic ocean.  
+<img width="1276" height="1204" alt="image" src="https://github.com/user-attachments/assets/342ef32d-12d7-4c70-acaa-11dc36dc92e7" />
+The Dataset contains dimension labels, coordinate labels, and individual DataArrays in the form of the "Data Variables" listed.
+## Using Variables
+Now, the entire wrfout file is open, but the variable DataArrays within are more important.  These are easily callable through labelling.  Each wrfout variable's label is the variable name.  For example, 2-meter temperature is "T2" and Sea Surface Temperature is "SST". Below, is an example calling the 2-meter temperature DataArray.
+```
+t2 = ds.T2
+print(t2)
+```
+I'm now pivoting to finishing this tutorial through an jupyter lab notebook that will get uploaded here.
