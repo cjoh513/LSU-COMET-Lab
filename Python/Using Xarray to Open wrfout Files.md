@@ -3,8 +3,8 @@ This is a tutorial for how to incorporate Xarray into your wrfout data analysis,
 
 Xarray is a powerful Python package designed to build upon NumPy and Pandas, ingesting and interacting with multi-dimensional arrays.  
 
-For example, WRF output variables are often these multi-dimensional arrays possibly encompassing time, latitude, longitude, height, and depth.  
-Often, wrfout files contain only a few timesteps per day but encompass full years.  Xarray offers the ability to bulk open and organize your data with ease.
+For example, WRF output variables are often multi-dimensional arrays encompassing time, latitude, longitude, height, and depth.  
+Often, wrf simulations span multiple years split into only a few timesteps per out-file per day.  Xarray offers the ability to bulk open and organize your data with ease.
 
 # Installation
 Anaconda is recommended as the easiest way to install Xarray and the necessary dependencies.  
